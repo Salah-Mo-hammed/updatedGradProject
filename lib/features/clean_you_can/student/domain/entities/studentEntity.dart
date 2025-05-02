@@ -8,7 +8,7 @@ class StudentEntity extends Equatable {
   String phoneNumber;
   String address;
   String? photoUrl;
-  List<int> registerdCourses;
+  List<String> registerdCourses;
 
   StudentEntity({
     required this.studentId,

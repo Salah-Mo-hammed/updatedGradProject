@@ -1,11 +1,17 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/Course-entity.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/pages/paymnet_method_page.dart';
 import 'package:intl/intl.dart';
 
 class ConfirmEnrollmentPage extends StatefulWidget {
+  final String currentStudentId;
   final CourseEntity selcetedCourse;
-  ConfirmEnrollmentPage({super.key, required this.selcetedCourse});
+  ConfirmEnrollmentPage({
+    super.key,
+    required this.selcetedCourse,
+    required this.currentStudentId,
+  });
 
   @override
   State<ConfirmEnrollmentPage> createState() =>
@@ -316,12 +322,25 @@ class _ConfirmEnrollmentPageState
                       onPressed: () {
                         //! evry condition here have it own event or you can make it with one event but it has parameter called index ()
                         if (isAgree && currentIndex != -1) {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => PaymentMethodPage(
+                                    currentStudentUid:
+                                        widget.currentStudentId,
+                                    currentCourseUid:
+                                        widget
+                                            .selcetedCourse
+                                            .courseId,
+                                  ),
+                            ),
+                          );
                           //! here put the event for the student to enroll the course but ud depends
                           if (currentIndex == 0) {
                             //! here means student want to pay with bank transfare(first selection)
                           } else if (currentIndex == 1) {
                             //! here means student want to pay with PalPay
-                            //! back here 
+                            //! back here
                           } else if (currentIndex == 2) {
                             //! here means student want to pay with Pay At Office
                           } else {
@@ -357,6 +376,7 @@ class _ConfirmEnrollmentPageState
     );
   }
 
+  //**************************************************************************************************************************************************!
   void _buildSnackBar(String content) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

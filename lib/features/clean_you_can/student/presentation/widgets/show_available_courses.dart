@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/Course-entity.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_event.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_state.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/widgets/common_widgets.dart';
 
 class ShowAvailableCoursesWidget extends StatefulWidget {
-  const ShowAvailableCoursesWidget({super.key});
+  final String studentId;
+  const ShowAvailableCoursesWidget({
+    super.key,
+    required this.studentId,
+  });
 
   @override
   State<ShowAvailableCoursesWidget> createState() =>
@@ -110,20 +115,24 @@ class _ShowAvailableCoursesWidgetState
           //!  List of Cards
           BlocBuilder<StudentBloc, StudentState>(
             builder: (context, state) {
-              if (state is StudentGotAvailableCoursesState) {
-                final availablecourses = state.availableCourses;
+              if (state is StudentGotAvailableAndHisCoursesState) {
+                final allCourses = state.allCourses;
+                List<CourseEntity> availableCourses = allCourses['allCourses'];
+                List<CourseEntity> filteredCourses = allCourses['filteredCourses'];
                 return SliverList(
                   delegate: SliverChildBuilderDelegate((
                     context,
                     index,
                   ) {
+
                     return CommonWidgets().buildCourseCard(
-                      availablecourses,
+                      widget.studentId,
+                      availableCourses,
                       index,
                       false,
                       context,
                     );
-                  }, childCount: availablecourses.length),
+                  }, childCount: availableCourses.length),
                 );
               } else if (state is StudentExceptionState) {
                 return SliverToBoxAdapter(
@@ -133,7 +142,9 @@ class _ShowAvailableCoursesWidgetState
                 );
               } else {
                 context.read<StudentBloc>().add(
-                  GetAvailableCoursesEvent(),
+                  GetAvailableAndMineCoursesEvent(
+                    studentId: widget.studentId,
+                  ),
                 );
 
                 return SliverToBoxAdapter(

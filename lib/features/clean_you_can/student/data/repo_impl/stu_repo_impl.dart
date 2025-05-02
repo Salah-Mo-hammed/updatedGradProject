@@ -7,12 +7,13 @@ import 'package:grad_project_ver_1/features/clean_you_can/student/domain/entitie
 import 'package:grad_project_ver_1/features/clean_you_can/student/domain/repo/student_repo.dart';
 
 class StudentRepoImpl implements StudentRepo {
-  StudentDataSource studentDataSource;
-  StudentRepoImpl({required this.studentDataSource });
+  WithFirebase studentDataSource;
+  StudentRepoImpl({required this.studentDataSource});
   @override
-  Future<Either<Failure, void>> createStudent(StudentEntity newStudent) {
-    StudentModel studentModel=
-    StudentModel(
+  Future<Either<Failure, void>> createStudent(
+    StudentEntity newStudent,
+  ) {
+    StudentModel studentModel = StudentModel(
       studentId: newStudent.studentId,
       name: newStudent.name,
       email: newStudent.email,
@@ -25,7 +26,12 @@ class StudentRepoImpl implements StudentRepo {
   }
 
   @override
-  Future<Either<Failure, List<CourseEntity>>> getAVaialableCourses() {
-    return studentDataSource.getAVaialableCourses();
+  Future<Either<Failure, Map<String,dynamic>>> getAVaialableAndMineCourses(String syudentId) {
+    return studentDataSource.getAVaialableCourses(syudentId);
+  }
+  
+  @override
+  Future<Either<Failure, Unit>> enrollInCourse(String studentId, String courseId) {
+    return studentDataSource.enrollInCourse(studentId, courseId);
   }
 }

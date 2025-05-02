@@ -29,127 +29,145 @@ class CommonWidgets {
   }
 
   InkWell buildCourseCard(
+    String currentStudentId,
     List<CourseEntity> courses,
     int index,
     bool inMyLearning,
     BuildContext context,
   ) {
-    return InkWell(
-      onTap:
-          () => Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder:
-                  (context) => CourseDetailsPage(
-                    course: courses[index],
-                    isStudent: false,
-                  ),
-            ),
-          ),
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        elevation: 1.5,
-        margin: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(15.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(7),
-                child: Image.network(
-                  courses.isEmpty || courses[index].imageUrl == null
-                      ? "https://imgs.search.brave.com/yFciH0dtD8HJZlPdobHcujhNe6DDXsC8M8_2AOwakCs/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9kM2Yx/aXlmeHh6OGkxZS5j/bG91ZGZyb250Lm5l/dC9jb3Vyc2VzL2Nv/dXJzZV9pbWFnZS81/YWUwZTA2MjQ0OTMu/anBn"
-                      : courses[index].imageUrl!,
-                  height: 100,
-                  width: 90,
-                  fit: BoxFit.cover,
+    return courses.isEmpty
+        ? InkWell(
+          child: Center(child: Text("")),
+        )
+        : InkWell(
+          onTap:
+              () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => CourseDetailsPage(
+                        studentId: currentStudentId,
+                        course: courses[index],
+                        isStudent: false,
+                      ),
                 ),
               ),
+          child: Card(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (!inMyLearning) ...[
-                      Text("  Technology"),
-                      SizedBox(height: 8),
-                    ],
-                    Text(
-                      courses.isEmpty
-                          ? "Modern Web Development"
-                          : courses[index].title,
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                      ),
+            elevation: 1.5,
+            margin: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(7),
+                    child: Image.network(
+                      courses[index].imageUrl == null
+                          ? "https://imgs.search.brave.com/yFciH0dtD8HJZlPdobHcujhNe6DDXsC8M8_2AOwakCs/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9kM2Yx/aXlmeHh6OGkxZS5j/bG91ZGZyb250Lm5l/dC9jb3Vyc2VzL2Nv/dXJzZV9pbWFnZS81/YWUwZTA2MjQ0OTMu/anBn"
+                          : courses[index].imageUrl!,
+                      height: 100,
+                      width: 90,
+                      fit: BoxFit.cover,
                     ),
-                    SizedBox(height: 4),
-                    Row(
+                  ),
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Icon(Icons.view_carousel_outlined, size: 16),
-                        SizedBox(width: 4),
-                        Text(
-                          inMyLearning
-                              ? "$index lesson  of 20"
-                              : "${index} Lessons",
-                        ),
                         if (!inMyLearning) ...[
-                          SizedBox(width: 10),
-                          Icon(Icons.access_time_rounded, size: 16),
-                          SizedBox(width: 4),
-                          Text("6 weeks"),
+                          Text("  Technology"),
+                          SizedBox(height: 8),
                         ],
-                      ],
-                    ),
-                    SizedBox(height: 8),
-                    inMyLearning
-                        ? Column(
+                        Text(
+                          courses[index].title,
+                          style: TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Row(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 5.0,
-                                horizontal: 5,
-                              ),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text("progress"),
-                                  Text("%70"),
-                                ],
-                              ),
+                            Icon(
+                              Icons.view_carousel_outlined,
+                              size: 16,
                             ),
-                            LinearProgressIndicator(
-                              borderRadius: BorderRadius.circular(25),
-                              value: 0.70,
-                              color: Colors.blue,
-                              minHeight: 10,
-                              backgroundColor: Colors.grey[300],
-                            ),
-                          ],
-                        )
-                        : Row(
-                          children: [
-                            Icon(Icons.star, color: Colors.orange),
                             SizedBox(width: 4),
                             Text(
-                              "4.8 (245)",
-                              style: TextStyle(color: Colors.orange),
+                              inMyLearning
+                                  ? "$index lesson  of 20"
+                                  : "${index} Lessons",
                             ),
+                            if (!inMyLearning) ...[
+                              SizedBox(width: 10),
+                              Icon(
+                                Icons.access_time_rounded,
+                                size: 16,
+                              ),
+                              SizedBox(width: 4),
+                              Text("6 weeks"),
+                            ],
                           ],
                         ),
-                  ],
+                        SizedBox(height: 8),
+                        inMyLearning
+                            ? Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 5.0,
+                                    horizontal: 5,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment
+                                            .spaceBetween,
+                                    children: [
+                                      Text("progress"),
+                                      Text("%70"),
+                                    ],
+                                  ),
+                                ),
+                                LinearProgressIndicator(
+                                  borderRadius: BorderRadius.circular(
+                                    25,
+                                  ),
+                                  value: 0.70,
+                                  color: Colors.blue,
+                                  minHeight: 10,
+                                  backgroundColor: Colors.grey[300],
+                                ),
+                              ],
+                            )
+                            : Row(
+                              children: [
+                                Icon(
+                                  Icons.star,
+                                  color: Colors.orange,
+                                ),
+                                SizedBox(width: 4),
+                                Text(
+                                  "4.8 (245)",
+                                  style: TextStyle(
+                                    color: Colors.orange,
+                                  ),
+                                ),
+                              ],
+                            ),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+        );
   }
 
   Padding buildStack(bool inCertificates) {

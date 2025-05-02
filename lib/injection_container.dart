@@ -24,6 +24,7 @@ import 'package:grad_project_ver_1/features/clean_you_can/student/data/repo_impl
 import 'package:grad_project_ver_1/features/clean_you_can/student/data/sources/remote/student_data_source.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/domain/repo/student_repo.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/domain/usecases/creat_student_usecase.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/domain/usecases/enroll_in_course_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/domain/usecases/get_available_courses_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc.dart';
 
@@ -35,7 +36,7 @@ Future<void> initialaizedDependencies() async {
   sl.registerSingleton<Dio>(Dio());
   //! data-dataSource
   sl.registerSingleton<AuthDataSource>(AuthDataSource());
-  sl.registerSingleton<StudentDataSource>(StudentDataSource());
+  sl.registerSingleton<WithFirebase>(WithFirebase());
   sl.registerSingleton<CenterDataSource>(CenterDataSource());
 
   //! domain-repo
@@ -43,7 +44,7 @@ Future<void> initialaizedDependencies() async {
     AuthRepoImpl(authDataSource: sl<AuthDataSource>()),
   );
   sl.registerSingleton<StudentRepo>(
-    StudentRepoImpl(studentDataSource: sl<StudentDataSource>()),
+    StudentRepoImpl(studentDataSource: sl<WithFirebase>()),
   );
   sl.registerSingleton<CenterRepo>(
     CenterRepoImpl(
@@ -93,8 +94,11 @@ Future<void> initialaizedDependencies() async {
   sl.registerSingleton<GetCourseStudents>(
     GetCourseStudents(centerRepo: sl<CenterRepo>()),
   );
-  sl.registerSingleton<GetAvailableCoursesUsecase>(
-    GetAvailableCoursesUsecase(studentRepo: sl<StudentRepo>()),
+  sl.registerSingleton<GetAvailableAndMineCoursesUsecase>(
+    GetAvailableAndMineCoursesUsecase(studentRepo: sl<StudentRepo>()),
+  );
+  sl.registerSingleton<EnrollInCourseUsecase>(
+    EnrollInCourseUsecase(studentRepo: sl<StudentRepo>()),
   );
   //! blocs
 
@@ -110,7 +114,8 @@ Future<void> initialaizedDependencies() async {
   sl.registerFactory(
     () => StudentBloc(
       creatStudentUsecase: sl<CreatStudentUsecase>(),
-      getAvailableCoursesUsecase: sl<GetAvailableCoursesUsecase>(),
+      getAvailableCoursesUsecase: sl<GetAvailableAndMineCoursesUsecase>(),
+      enrollInCourseUsecase: sl<EnrollInCourseUsecase>(),
     ),
   );
   sl.registerFactory(

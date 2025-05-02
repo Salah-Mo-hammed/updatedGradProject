@@ -32,7 +32,7 @@ class StudentModel extends StudentEntity {
       phoneNumber: json['phoneNumber']as String,
       address: json['adress']as String,
       photoUrl: json['photoUrl']as String?,
-      registerdCourses: List<int>.from(json['registerdCourses'] ?? []), 
+      registerdCourses: List<String>.from(json['registerdCourses'] ?? []), 
     );
   }
 }

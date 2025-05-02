@@ -21,7 +21,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     // uncomment this to stop auto sign in
-    FirebaseAuth.instance.signOut();
+    // FirebaseAuth.instance.signOut();
     super.initState();
     // Fade-in the center image
     Future.delayed(const Duration(milliseconds: 500), () {
@@ -45,6 +45,19 @@ class _SplashPageState extends State<SplashPage> {
 
   // check if there is a user (check if  he is center then go to center dashboard
   //, and same for stu) if there is already  no user then go to auth choice page to log or register
+  /*
+ * this code for getting the user id even if he is student or center
+     final user = FirebaseAuth.instance.currentUser;
+    final firestore = FirebaseFirestore.instance;
+    if (user != null) {
+      final userDoc =
+          await firestore
+              .collection('Users')
+              .doc(user.uid.toString())
+              .get();
+      if (userDoc.exists) {
+        final userData = userDoc.data();
+ */
   void _checkLoginStatus() async {
     final user = FirebaseAuth.instance.currentUser;
     final firestore = FirebaseFirestore.instance;

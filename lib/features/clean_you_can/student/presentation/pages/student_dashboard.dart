@@ -29,15 +29,15 @@ class _StudentDashboardState extends State<StudentDashboard> {
   Widget _getSelectedPage(int index) {
     switch (index) {
       case 0:
-        return ShowAvailableCoursesWidget();
+        return ShowAvailableCoursesWidget(studentId:widget.currentStudentId);
       case 1:
-        return MyLearningWidget();
+        return MyLearningWidget(studentId: widget.currentStudentId,);
       case 2:
         return CertificatesWidget();
       case 3:
         return NotificationsWidget();
       default:
-        return ShowAvailableCoursesWidget();
+        return ShowAvailableCoursesWidget(studentId:widget.currentStudentId);
     }
   }
   @override

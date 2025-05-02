@@ -8,12 +8,14 @@ import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/p
 
 class CourseDetailsPage extends StatelessWidget {
   final bool isStudent;
+ final String? studentId;
   final CourseEntity course;
 
   const CourseDetailsPage({
     super.key,
     required this.course,
     required this.isStudent,
+    this.studentId
   });
 
   @override
@@ -61,7 +63,7 @@ class CourseDetailsPage extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder:
-                          (context) => ConfirmEnrollmentPage(
+                          (context) => ConfirmEnrollmentPage(currentStudentId:studentId!,
                             selcetedCourse: course,
                           ),
                     ),
