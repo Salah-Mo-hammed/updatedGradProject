@@ -1,4 +1,4 @@
-import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/Course-entity.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
 
 abstract class CenterState {
   const CenterState();
@@ -21,7 +21,7 @@ class CenterUpdatedCourseState extends CenterState {}
 
 
 class CenterExceptionState extends CenterState {
-  final message;
+  final String message;
   CenterExceptionState({required this.message});
 }
 

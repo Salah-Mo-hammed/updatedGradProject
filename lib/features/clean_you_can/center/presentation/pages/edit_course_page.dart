@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_event.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/Course-entity.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
 
 class EditCoursePage extends StatefulWidget {
   final CourseEntity course;

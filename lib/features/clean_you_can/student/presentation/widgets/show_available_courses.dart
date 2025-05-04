@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/Course-entity.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_event.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_state.dart';
@@ -71,8 +71,9 @@ class _ShowAvailableCoursesWidgetState
                         setState(() {
                           if (_selectedButton == index) {
                             _selectedButton = -1;
-                          } else
+                          } else {
                             _selectedButton = index;
+                          }
                         });
                       },
                       child: Text(categories[index]),
@@ -118,7 +119,6 @@ class _ShowAvailableCoursesWidgetState
               if (state is StudentGotAvailableAndHisCoursesState) {
                 final allCourses = state.allCourses;
                 List<CourseEntity> availableCourses = allCourses['allCourses'];
-                List<CourseEntity> filteredCourses = allCourses['filteredCourses'];
                 return SliverList(
                   delegate: SliverChildBuilderDelegate((
                     context,

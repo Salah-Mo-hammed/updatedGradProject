@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/center_course_details_page.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/Course-entity.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
 
 class CommonWidgets {
   // available courses or recent courses
@@ -102,6 +102,7 @@ class CommonWidgets {
                             Text(
                               inMyLearning
                                   ? "$index lesson  of 20"
+                                  // ignore: unnecessary_brace_in_string_interps
                                   : "${index} Lessons",
                             ),
                             if (!inMyLearning) ...[

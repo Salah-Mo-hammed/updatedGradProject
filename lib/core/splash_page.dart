@@ -21,7 +21,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     // uncomment this to stop auto sign in
-    // FirebaseAuth.instance.signOut();
+     FirebaseAuth.instance.signOut();
     super.initState();
     // Fade-in the center image
     Future.delayed(const Duration(milliseconds: 500), () {
@@ -71,10 +71,12 @@ class _SplashPageState extends State<SplashPage> {
         final userData = userDoc.data();
         final role = userData?['role'];
         if (role == "student") {
+          // ignore: avoid_print
           print(
             "**********************************************************************************************************  user id in splash page is ${userData!['userId']}",
           );
           Navigator.pushReplacement(
+            // ignore: use_build_context_synchronously
             context,
             MaterialPageRoute(
               builder:
@@ -85,6 +87,7 @@ class _SplashPageState extends State<SplashPage> {
           );
         } else if (role == "center") {
           Navigator.pushReplacement(
+            // ignore: use_build_context_synchronously
             context,
             MaterialPageRoute(
               builder:
@@ -93,6 +96,7 @@ class _SplashPageState extends State<SplashPage> {
           );
         } else {
           Navigator.pushReplacement(
+            // ignore: use_build_context_synchronously
             context,
             MaterialPageRoute(
               builder:

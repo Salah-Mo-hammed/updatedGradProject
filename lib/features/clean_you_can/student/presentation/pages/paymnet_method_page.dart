@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grad_project_ver_1/features/auth/presintation/bloc/auth_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_event.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_state.dart';

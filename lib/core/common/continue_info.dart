@@ -6,7 +6,7 @@ import 'package:grad_project_ver_1/features/clean_you_can/center/domain/entities
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_event.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/center_dashboard_page.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/student/domain/entities/studentEntity.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/domain/entities/student_entity.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_event.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/pages/student_dashboard.dart';

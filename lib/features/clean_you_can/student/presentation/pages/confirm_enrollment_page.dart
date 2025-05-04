@@ -1,13 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/Course-entity.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/pages/paymnet_method_page.dart';
 import 'package:intl/intl.dart';
 
 class ConfirmEnrollmentPage extends StatefulWidget {
   final String currentStudentId;
   final CourseEntity selcetedCourse;
-  ConfirmEnrollmentPage({
+  const ConfirmEnrollmentPage({
     super.key,
     required this.selcetedCourse,
     required this.currentStudentId,
@@ -119,19 +119,19 @@ class _ConfirmEnrollmentPageState
                       16,
                       FontWeight.bold,
                     ),
-                    _build_What_Yoy_Get_Row(
+                    _build_What_You_Get_Row(
                       "Professional Certificates upon completion",
                     ),
-                    _build_What_Yoy_Get_Row(
+                    _build_What_You_Get_Row(
                       "Lifetime access to course materials",
                     ),
-                    _build_What_Yoy_Get_Row(
+                    _build_What_You_Get_Row(
                       "24/7 support from instructors",
                     ),
-                    _build_What_Yoy_Get_Row(
+                    _build_What_You_Get_Row(
                       "Practical projects and case studies",
                     ),
-                    _build_What_Yoy_Get_Row(
+                    _build_What_You_Get_Row(
                       "Flexible learning sceduale",
                     ),
                   ],
@@ -459,7 +459,8 @@ class _ConfirmEnrollmentPageState
     );
   }
 
-  Padding _build_What_Yoy_Get_Row(String title) {
+  // ignore: non_constant_identifier_names
+  Padding _build_What_You_Get_Row(String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: Row(

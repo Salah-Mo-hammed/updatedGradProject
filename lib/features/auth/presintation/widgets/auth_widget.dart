@@ -57,6 +57,7 @@ class _AuthWidgetState extends State<AuthWidget> {
       if (state.authUser.isVerified) {
         // isCompletedInfo  means if user completed the info like name , location ,phone number and so on
         if (state.authUser.isCompletedInfo!) {
+          // ignore: avoid_print
           print(
             "************************************************************************************************************************ role now  is $userRole",
           );
@@ -104,6 +105,7 @@ class _AuthWidgetState extends State<AuthWidget> {
     //   });
     // }
     else if (state is AuthStateException) {
+      // ignore: avoid_print
       print(
         "*********************************************** exception here is :${state.exceptionMessage.toString()}",
       );

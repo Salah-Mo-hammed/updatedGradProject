@@ -6,8 +6,8 @@ import 'package:grad_project_ver_1/features/clean_you_can/center/data/sources/re
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/entities/center_entity.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/repo/center_repo.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/course/data/models/course_model.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/Course-entity.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/student/domain/entities/studentEntity.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/domain/entities/student_entity.dart';
 
 class CenterRepoImpl implements CenterRepo {
   CenterDataSource centerDataSource;

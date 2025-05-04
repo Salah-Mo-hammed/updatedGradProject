@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:grad_project_ver_1/core/errors/failure.dart';
@@ -20,6 +22,7 @@ class CenterDataSource {
       print(
         "*************************done creating Center and adding to firestore",
       );
+      // ignore: void_checks
       return Right(unit);
     } on FirebaseException catch (e) {
       return Left(DatabaseFailure(e.toString()));

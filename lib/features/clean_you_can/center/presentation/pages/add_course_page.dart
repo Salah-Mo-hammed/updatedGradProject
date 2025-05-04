@@ -1,10 +1,12 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grad_project_ver_1/core/colors/app_color.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_event.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_state.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/Course-entity.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
 import 'package:animate_do/animate_do.dart';
 
 // ignore: must_be_immutable
@@ -14,6 +16,7 @@ class AddCoursePage extends StatefulWidget {
   AddCoursePage({super.key, required this.centerId});
 
   @override
+  // ignore: library_private_types_in_public_api
   _AddCoursePageState createState() => _AddCoursePageState();
 }
 

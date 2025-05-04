@@ -5,6 +5,7 @@ import 'package:grad_project_ver_1/core/splash_page.dart';
 import 'package:grad_project_ver_1/features/auth/presintation/bloc/auth_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/trainer/presintation/bloc/trainer_bloc.dart';
 import 'package:grad_project_ver_1/firebase_options.dart';
 import 'package:grad_project_ver_1/injection_container.dart';
 
@@ -27,6 +28,8 @@ class MyApp extends StatelessWidget {
         BlocProvider<AuthBloc>(create: (_) => sl<AuthBloc>()),
         BlocProvider<StudentBloc>(create: (_) => sl<StudentBloc>()),
         BlocProvider<CenterBloc>(create: (_) => sl<CenterBloc>()),
+        BlocProvider<TrainerBloc>(create: (_) => sl<TrainerBloc>()),
+
       ],
       child: MaterialApp(home: SplashPage()),
     );

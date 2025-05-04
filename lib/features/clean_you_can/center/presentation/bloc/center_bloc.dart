@@ -52,7 +52,7 @@ class CenterBloc extends Bloc<CenterEvent, CenterState> {
     final result = await addCourseUsecase.call(event.addCourseEntity);
     result.fold(
       (failure) {
-        emit(CenterExceptionState(message: failure));
+        emit(CenterExceptionState(message: failure.message));
       },
       (course) {
         emit(CenterAddedCourseState(courseEntity: course));

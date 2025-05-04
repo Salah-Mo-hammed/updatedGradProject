@@ -3,9 +3,37 @@ import 'package:dartz/dartz.dart';
 import 'package:grad_project_ver_1/core/errors/failure.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/course/data/models/course_model.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/data/models/student_model.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/domain/entities/student_entity.dart';
 
 class WithFirebase {
   final _firestore = FirebaseFirestore.instance;
+
+  Future<Either<Failure, StudentEntity>> getstudentInfo(
+    String studentUid,
+  ) async {
+    try {
+      final studentSnapshot =
+          await _firestore
+              .collection("Students")
+              .doc(studentUid)
+              .get();
+      if (!studentSnapshot.exists || studentSnapshot.data() == null) {
+        return Left(
+          ServerFailure("there is no student with this uid"),
+        );
+      }
+      final studentData =
+          studentSnapshot.data() as Map<String, dynamic>;
+      StudentModel fechedStudent = StudentModel.fromJson(studentData);
+      return Right(fechedStudent);
+    } catch (e) {
+      return Left(
+        ServerFailure(
+          "problem in student data source in getstudent Info",
+        ),
+      );
+    }
+  }
 
   Future<Either<Failure, Map<String, dynamic>>> getAVaialableCourses(
     String studentId,
@@ -134,9 +162,11 @@ class WithFirebase {
           .doc(newStudent.studentId)
           .update({'isCompletedInfo': true});
 
+      // ignore: avoid_print
       print(
         "*************************done creating student and adding to firestore",
       );
+      // ignore: void_checks
       return Right(unit);
     } on FirebaseException catch (e) {
       return Left(DatabaseFailure(e.toString()));

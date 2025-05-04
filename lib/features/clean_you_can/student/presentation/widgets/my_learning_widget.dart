@@ -1,6 +1,8 @@
+// ignore_for_file: avoid_print
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/Course-entity.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/widgets/common_widgets.dart';
 
@@ -17,7 +19,7 @@ class MyLearningWidget extends StatelessWidget {
             .state
             .availableCourses!['filteredCourses'];
     print(
-      "*-*-*/-*/-/*-/-*-*-*/-*/-*-*-*--*- ${filteredCourses} before go to in progress",
+      "*-*-*/-*/-/*-/-*-*-*/-*/-*-*-*--*- $filteredCourses before go to in progress",
     );
     return Expanded(
       child: CustomScrollView(
