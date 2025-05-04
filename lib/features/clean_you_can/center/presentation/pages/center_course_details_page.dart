@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_event.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_courses_bloc/center_courses_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_event.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/edit_course_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/pages/confirm_enrollment_page.dart';
 
 class CourseDetailsPage extends StatelessWidget {
   final bool isStudent;
- final String? studentId;
+  final String? studentId;
   final CourseEntity course;
 
   const CourseDetailsPage({
     super.key,
     required this.course,
     required this.isStudent,
-    this.studentId
+    this.studentId,
   });
 
   @override
@@ -36,7 +37,7 @@ class CourseDetailsPage extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.delete, color: Colors.white),
               onPressed: () {
-                context.read<CenterBloc>().add(
+                context.read<CenterCoursesBloc>().add(
                   DeleteCourseEvent(courseId: course.courseId),
                 );
               },
@@ -63,7 +64,8 @@ class CourseDetailsPage extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder:
-                          (context) => ConfirmEnrollmentPage(currentStudentId:studentId!,
+                          (context) => ConfirmEnrollmentPage(
+                            currentStudentId: studentId!,
                             selcetedCourse: course,
                           ),
                     ),

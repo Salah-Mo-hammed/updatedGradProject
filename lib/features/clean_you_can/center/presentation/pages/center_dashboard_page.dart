@@ -4,14 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:grad_project_ver_1/core/colors/app_color.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_event.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_state.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_courses_bloc/center_courses_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_event.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_state.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/add_course_page.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/add_trainer_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/center_course_details_page.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/trainer/domain/entities/trainer_entity.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/trainer/domain/repo/trianer_repo.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/trainer/presintation/bloc/trainer_bloc.dart';
 
 class CenterDashboard extends StatefulWidget {
   final String centerId;
@@ -158,6 +157,7 @@ class _CenterDashboardState extends State<CenterDashboard> {
     );
   }
 
+  //! done Scaffold**********************************************************************
   Widget _buildCoursesPage() {
     return FadeIn(
       duration: const Duration(milliseconds: 500),
@@ -204,7 +204,10 @@ class _CenterDashboardState extends State<CenterDashboard> {
             ),
             const SizedBox(height: 22),
             Expanded(
-              child: BlocBuilder<CenterBloc, CenterState>(
+              child: BlocBuilder<
+                CenterCoursesBloc,
+                CenterCoursesState
+              >(
                 builder: (context, state) {
                   if (state is CenterGotCoursesState) {
                     if (state.courses.isEmpty) {
@@ -306,7 +309,7 @@ class _CenterDashboardState extends State<CenterDashboard> {
                             ),
                           ),
                     );
-                  } else if (state is CenterExceptionState) {
+                  } else if (state is CenterCoursesExceptionState) {
                     return FadeIn(
                       duration: const Duration(milliseconds: 350),
                       child: Center(
@@ -320,7 +323,7 @@ class _CenterDashboardState extends State<CenterDashboard> {
                       ),
                     );
                   } else {
-                    context.read<CenterBloc>().add(
+                    context.read<CenterCoursesBloc>().add(
                       GetCenterCoursesEvent(
                         centerId: widget.centerId,
                       ),
@@ -421,12 +424,6 @@ class _CenterDashboardState extends State<CenterDashboard> {
   }
 
   Widget _buildTrainersPage() {
-    TextEditingController nameController = TextEditingController();
-    TextEditingController passwordController =
-        TextEditingController();
-    TextEditingController emailController = TextEditingController();
-    TextEditingController phoneController = TextEditingController();
-
     return Padding(
       padding: const EdgeInsets.all(12.0),
       child: Column(
@@ -435,135 +432,13 @@ class _CenterDashboardState extends State<CenterDashboard> {
             duration: const Duration(milliseconds: 650),
             child: GestureDetector(
               onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(18),
-                      ),
-                      title: Text(
-                        "Add Trainer",
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.brown,
-                        ),
-                      ),
-                      content: SingleChildScrollView(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            TextField(
-                              controller: nameController,
-                              decoration: InputDecoration(
-                                labelText: "Name",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    12,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            TextField(
-                              controller: emailController,
-                              decoration: InputDecoration(
-                                labelText: "Email",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    12,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            TextField(
-                              controller: passwordController,
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                labelText: "Password",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    12,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            TextField(
-                              controller: phoneController,
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                labelText: "phone",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    12,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-
-                            const SizedBox(height: 12),
-                            ElevatedButton.icon(
-                              onPressed: () {
-                                // Handle image upload logic here
-                              },
-                              icon: const Icon(Icons.image),
-                              label: const Text("Upload Image"),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.bronze,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    12,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text(
-                            "Cancel",
-                            style: TextStyle(
-                              color: AppColors.mediumGray,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            TrainerEntity newTrainer = TrainerEntity(
-                              uid: "",
-                              name: nameController.text,
-                              email: emailController.text,
-                              password: passwordController.text,
-                              phone: phoneController.text,
-                              imageUrl: null,
-                              coursesIds: [],
-                              centerId: widget.centerId,
-                            );
-                            context.read<TrainerBloc>().add(
-                              CreateTrainerEvent(
-                                newTrainer: newTrainer,
-                              ),
-                            );
-                            Navigator.of(context).pop();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.bronze,
-                          ),
-                          child: const Text("Submit"),
-                        ),
-                      ],
-                    );
-                  },
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) =>
+                            AddTrainerPage(centerId: widget.centerId),
+                  ),
                 );
               },
               child: Card(
@@ -602,28 +477,44 @@ class _CenterDashboardState extends State<CenterDashboard> {
             ),
           ),
           Expanded(
-            child: BlocBuilder<TrainerBloc, TrainerState>(
+            child: BlocBuilder<CenterTrainerBloc, CenterTrainerState>(
               builder: (context, state) {
-                if (state is TrainerLoadingState) {
-                  return Center(
-                    child: Text(
-                      "state now in trainer in center dashboard is ${state}",
-                    ),
-                  );
-                } else if (state is TrainerCreatedState) {
-                  String tUid = state.trainerUid;
-                  print(state.trainerUid);
-                  return Center(
-                    child: Text(
-                      "trainer added state with generatedId $tUid.",
-                    ),
-                  );
-                } else if (state is TrainerExceptionState) {
-                  return Center(child: Text(state.errorMessage));
+                if (state is CenterGotTrainersState) {
+                  final currentTrainers = state.trainers;
+                  if (currentTrainers.isEmpty) {
+                    return Center(
+                      child: Text(
+                        "no trainers has been added for now !",
+                      ),
+                    );
+                  } else {
+                    return ListView.builder(
+                      itemCount: currentTrainers.length,
+                      itemBuilder:
+                          (context, index) => Card(
+                            child: ListTile(
+                              title: Text(
+                                currentTrainers[index].name,
+                              ),
+                            ),
+                          ),
+                    );
+                  }
+                } else if (state is CenterTrainerExceptionState) {
+                  return Center(child: Text(state.message));
                 } else {
+                  context.read<CenterTrainerBloc>().add(
+                    FetchCenterTrainers(centerId: widget.centerId),
+                  );
                   return Center(
-                    child: Text(
-                      "state now in trainer in center dashboard is ${state}",
+                    child: Column(
+                      children: [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 10),
+                        Text(
+                          "state now in trainer in center dashboard is ${state}",
+                        ),
+                      ],
                     ),
                   );
                 }

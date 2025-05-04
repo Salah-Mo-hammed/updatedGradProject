@@ -3,8 +3,9 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grad_project_ver_1/core/colors/app_color.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/entities/center_entity.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_event.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_general_bloc/center_general_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_event.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/center_dashboard_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/domain/entities/student_entity.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc.dart';
@@ -274,7 +275,11 @@ class _ContinueInfoState extends State<ContinueInfo> {
       );
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => StudentDashboard(currentStudentId:widget.userId ,)),
+        MaterialPageRoute(
+          builder:
+              (context) =>
+                  StudentDashboard(currentStudentId: widget.userId),
+        ),
       );
     } else {
       CenterEntity createCenter = CenterEntity(
@@ -285,7 +290,7 @@ class _ContinueInfoState extends State<ContinueInfo> {
         address: address,
         description: "no desc for now ",
       );
-      context.read<CenterBloc>().add(
+      context.read<CenterGeneralBloc>().add(
         CreateCenterEvent(createCenter: createCenter),
       );
       Navigator.push(

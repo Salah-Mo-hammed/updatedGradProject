@@ -1,75 +1,60 @@
 import 'dart:async';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/create_centerusecase.dart';
+
+import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/create_course_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/delete_course_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/get_center_courses_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/update_course_usecase.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_event.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_state.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
 
-class CenterBloc extends Bloc<CenterEvent, CenterState> {
-  CreateCenterusecase createCenterusecase;
+part 'center_courses_event.dart';
+part 'center_courses_state.dart';
+
+class CenterCoursesBloc
+    extends Bloc<CenterCoursesEvent, CenterCoursesState> {
   AddCourseUsecase addCourseUsecase;
   UpdateCourseUsecase updateCourseUsecase;
   GetCenterCoursesUsecase getCenterCoursesUsecase;
   DeleteCourseUsecase deleteCourseUsecase;
-  CenterBloc({
+  CenterCoursesBloc({
     required this.deleteCourseUsecase,
     required this.updateCourseUsecase,
-    required this.createCenterusecase,
     required this.addCourseUsecase,
     required this.getCenterCoursesUsecase,
-  }) : super(const CenterInitialState()) {
-    on<CreateCenterEvent>(onCreateCenter);
+  }) : super(CenterCoursesInitial()) {
     on<AddCourseEvent>(onAddCourse);
     on<GetCenterCoursesEvent>(onGetCenterCourses);
     on<UpdateCourseEvent>(onUpdateCourse);
     on<DeleteCourseEvent>(onDeleteCourse);
   }
 
-  FutureOr<void> onCreateCenter(
-    CreateCenterEvent event,
-    Emitter<CenterState> emit,
-  ) async {
-    emit(CenterLoadingState());
-    final result = await createCenterusecase.call(event.createCenter);
-    result.fold(
-      (failure) {
-        emit(CenterExceptionState(message: failure.message));
-      },
-      (unit) {
-        emit(CenterCreatedState());
-      },
-    );
-  }
-
   FutureOr<void> onAddCourse(
     AddCourseEvent event,
-    Emitter<CenterState> emit,
+    Emitter<CenterCoursesState> emit,
   ) async {
-    emit(CenterLoadingState());
+    emit(CenterCoursesLoadingState());
     final result = await addCourseUsecase.call(event.addCourseEntity);
     result.fold(
       (failure) {
-        emit(CenterExceptionState(message: failure.message));
+        emit(CenterCoursesExceptionState(message: failure.message));
       },
-      (course) {
-        emit(CenterAddedCourseState(courseEntity: course));
+      (addedCourse) {
+        emit(CenterAddedCourseState(courseEntity: addedCourse));
       },
     );
   }
 
   FutureOr<void> onGetCenterCourses(
     GetCenterCoursesEvent event,
-    Emitter<CenterState> emit,
+    Emitter<CenterCoursesState> emit,
   ) async {
-    emit(CenterLoadingState());
+    emit(CenterCoursesLoadingState());
 
     final result = await getCenterCoursesUsecase.call(event.centerId);
     result.fold(
       (failure) {
-        emit(CenterExceptionState(message: failure.message));
+        emit(CenterCoursesExceptionState(message: failure.message));
       },
       (courses) {
         emit(CenterGotCoursesState(courses: courses));
@@ -79,32 +64,34 @@ class CenterBloc extends Bloc<CenterEvent, CenterState> {
 
   FutureOr<void> onUpdateCourse(
     UpdateCourseEvent event,
-    Emitter<CenterState> emit,
+    Emitter<CenterCoursesState> emit,
   ) async {
-    emit(CenterLoadingState());
-    final result = await updateCourseUsecase.call(event.updateCourseEntity);
+    emit(CenterCoursesLoadingState());
+    final result = await updateCourseUsecase.call(
+      event.updateCourseEntity,
+    );
     result.fold(
       (failure) {
-        emit(CenterExceptionState(message: failure.message));
+        emit(CenterCoursesExceptionState(message: failure.message));
       },
       (successMessage) {
-        emit(CenterUpdatedCourseState());
+        emit(CenterUpdatedCourseState(updated: successMessage));
       },
     );
   }
 
   FutureOr<void> onDeleteCourse(
     DeleteCourseEvent event,
-    Emitter<CenterState> emit,
+    Emitter<CenterCoursesState> emit,
   ) async {
-    emit(CenterLoadingState());
+    emit(CenterCoursesLoadingState());
     final result = await deleteCourseUsecase.call(event.courseId);
     result.fold(
       (failure) {
-        emit(CenterExceptionState(message: failure.message));
+        emit(CenterCoursesExceptionState(message: failure.message));
       },
       (success) {
-        emit(CenterInitialState());
+        emit(CenterCoursesInitial());
       },
     );
   }

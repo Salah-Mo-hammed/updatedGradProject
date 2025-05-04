@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_event.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_courses_bloc/center_courses_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_event.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
 
 class EditCoursePage extends StatefulWidget {
@@ -26,7 +27,9 @@ class _EditCoursePageState extends State<EditCoursePage> {
   @override
   void initState() {
     super.initState();
-    _titleController = TextEditingController(text: widget.course.title);
+    _titleController = TextEditingController(
+      text: widget.course.title,
+    );
     _descriptionController = TextEditingController(
       text: widget.course.description,
     );
@@ -120,7 +123,9 @@ class _EditCoursePageState extends State<EditCoursePage> {
                     title: _titleController.text.trim(),
                     description: _descriptionController.text.trim(),
                     price: double.parse(_priceController.text.trim()),
-                    maxStudents: int.parse(_maxStudentsController.text.trim()),
+                    maxStudents: int.parse(
+                      _maxStudentsController.text.trim(),
+                    ),
                     startDate: _startDate,
                     endDate: _endDate,
                     enrolledStudents:
@@ -128,11 +133,15 @@ class _EditCoursePageState extends State<EditCoursePage> {
                     topics: widget.course.topics, // نفس المواضيع
                     imageUrl: widget.course.imageUrl,
                     centerId:
-                        widget.course.centerId, // نفس الصورة لو كانت موجودة
+                        widget
+                            .course
+                            .centerId, // نفس الصورة لو كانت موجودة
                   );
 
-                  context.read<CenterBloc>().add(
-                    UpdateCourseEvent(updateCourseEntity: updatedCourse),
+                  context.read<CenterCoursesBloc>().add(
+                    UpdateCourseEvent(
+                      updateCourseEntity: updatedCourse,
+                    ),
                   );
                 },
                 style: ElevatedButton.styleFrom(
@@ -166,22 +175,33 @@ class _EditCoursePageState extends State<EditCoursePage> {
         maxLines: maxLines,
         decoration: InputDecoration(
           labelText: label,
-          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
         ),
         validator:
             (value) =>
-                value == null || value.isEmpty ? "Please enter $label" : null,
+                value == null || value.isEmpty
+                    ? "Please enter $label"
+                    : null,
       ),
     );
   }
 
-  Widget _buildDatePicker(String label, DateTime date, VoidCallback onTap) {
+  Widget _buildDatePicker(
+    String label,
+    DateTime date,
+    VoidCallback onTap,
+  ) {
     return ListTile(
       title: Text(label),
       subtitle: Text(
         "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}",
       ),
-      trailing: const Icon(Icons.calendar_today, color: Colors.blueAccent),
+      trailing: const Icon(
+        Icons.calendar_today,
+        color: Colors.blueAccent,
+      ),
       onTap: onTap,
     );
   }

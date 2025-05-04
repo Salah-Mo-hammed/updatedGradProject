@@ -8,6 +8,8 @@ import 'package:grad_project_ver_1/features/clean_you_can/center/domain/repo/cen
 import 'package:grad_project_ver_1/features/clean_you_can/course/data/models/course_model.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/domain/entities/student_entity.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/trainer/data/models/trainer_model.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/trainer/domain/entities/trainer_entity.dart';
 
 class CenterRepoImpl implements CenterRepo {
   CenterDataSource centerDataSource;
@@ -30,7 +32,9 @@ class CenterRepoImpl implements CenterRepo {
   }
 
   @override
-  Future<Either<Failure, CourseEntity>> addCourse(CourseEntity courseEntity) {
+  Future<Either<Failure, CourseEntity>> addCourse(
+    CourseEntity courseEntity,
+  ) {
     CourseModel courseModel = CourseModel(
       courseId: courseEntity.courseId,
       title: courseEntity.title,
@@ -58,7 +62,9 @@ class CenterRepoImpl implements CenterRepo {
   }
 
   @override
-  Future<Either<Failure, List<StudentEntity>>> getCourseStudents(int courseId) {
+  Future<Either<Failure, List<StudentEntity>>> getCourseStudents(
+    int courseId,
+  ) {
     // TODO: implement getCourseStudents
     throw UnimplementedError();
   }
@@ -79,5 +85,28 @@ class CenterRepoImpl implements CenterRepo {
       maxStudents: courseEntity.maxStudents,
     );
     return centerDataSource.updateCourse(courseModel);
+  }
+
+  @override
+  Future<Either<Failure, List<TrainerEntity>>> fetchCenterTrainers(
+    String centerId,
+  ) {
+    return centerDataSource.fetchCenterTrainers(centerId);
+  }
+
+  @override
+  Future<Either<Failure, String>> createTrainer(
+    TrainerEntity newTrainer,String password
+  ) {
+    TrainerModel trainerModel = TrainerModel(
+      uid: newTrainer.uid,
+      name: newTrainer.name,
+      email: newTrainer.email,
+      phone: newTrainer.phone,
+      imageUrl: newTrainer.imageUrl,
+      coursesIds: newTrainer.coursesIds,
+      centerId: newTrainer.centerId,
+    );
+    return centerDataSource.createTrainer(trainerModel,password);
   }
 }

@@ -16,10 +16,13 @@ import 'package:grad_project_ver_1/features/clean_you_can/center/domain/repo/cen
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/create_centerusecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/create_course_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/delete_course_usecase.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/fetch_center_trainers_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/get_center_courses_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/get_course_students.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/update_course_usecase.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_courses_bloc/center_courses_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_general_bloc/center_general_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/data/repo_impl/stu_repo_impl.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/data/sources/remote/student_data_source.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/domain/repo/student_repo.dart';
@@ -27,11 +30,11 @@ import 'package:grad_project_ver_1/features/clean_you_can/student/domain/usecase
 import 'package:grad_project_ver_1/features/clean_you_can/student/domain/usecases/enroll_in_course_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/domain/usecases/get_available_courses_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/trainer/data/repo_impl/trainer_repo_impl.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/trainer/data/sources/remote/trainer_remote_data_source.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/trainer/domain/repo/trianer_repo.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/trainer/domain/usecases/create_trainer_usecase.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/trainer/presintation/bloc/trainer_bloc.dart';
+// import 'package:grad_project_ver_1/features/clean_you_can/trainer/data/repo_impl/trainer_repo_impl.dart';
+// import 'package:grad_project_ver_1/features/clean_you_can/trainer/data/sources/remote/trainer_remote_data_source.dart';
+// import 'package:grad_project_ver_1/features/clean_you_can/trainer/domain/repo/trianer_repo.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/create_trainer_usecase.dart';
+// import 'package:grad_project_ver_1/features/clean_you_can/trainer/presintation/bloc/trainer_bloc.dart';
 
 GetIt sl = GetIt.instance;
 Future<void> initialaizedDependencies() async {
@@ -43,9 +46,9 @@ Future<void> initialaizedDependencies() async {
   sl.registerSingleton<AuthDataSource>(AuthDataSource());
   sl.registerSingleton<WithFirebase>(WithFirebase());
   sl.registerSingleton<CenterDataSource>(CenterDataSource());
-  sl.registerSingleton<TrainerRemoteDataSource>(
-    TrainerRemoteDataSource(),
-  );
+  // sl.registerSingleton<TrainerRemoteDataSource>(
+  //   TrainerRemoteDataSource(),
+  // );
 
   //! domain-repo but inside it repo impl
   sl.registerSingleton<AuthRepo>(
@@ -60,11 +63,11 @@ Future<void> initialaizedDependencies() async {
       centerDataSource: sl<CenterDataSource>(),
     ),
   );
-  sl.registerSingleton<TrianerRepo>(
-    TrainerRepoImpl(
-      trainerRemoteDataSource: sl<TrainerRemoteDataSource>(),
-    ),
-  );
+  // sl.registerSingleton<TrianerRepo>(
+  //   TrainerRepoImpl(
+  //     trainerRemoteDataSource: sl<TrainerRemoteDataSource>(),
+  //   ),
+  // );
   //! domain-usecases
 
   sl.registerSingleton<LogInUsecase>(
@@ -114,7 +117,10 @@ Future<void> initialaizedDependencies() async {
     EnrollInCourseUsecase(studentRepo: sl<StudentRepo>()),
   );
   sl.registerSingleton<CreateTrainerUsecase>(
-    CreateTrainerUsecase(trianerRepo: sl<TrianerRepo>()),
+    CreateTrainerUsecase(centerRepo: sl<CenterRepo>()),
+  );
+  sl.registerSingleton<FetchCenterTrainersUsecase>(
+    FetchCenterTrainersUsecase(centerRepo: sl<CenterRepo>()),
   );
   //! blocs
 
@@ -136,16 +142,28 @@ Future<void> initialaizedDependencies() async {
     ),
   );
   sl.registerFactory(
-    () => CenterBloc(
+    () => CenterTrainerBloc(
+      fetchCenterTrainersUsecase: sl<FetchCenterTrainersUsecase>(),
+      createTrainerUsecase: sl<CreateTrainerUsecase>(),
+    ),
+  );
+
+  sl.registerFactory(
+    () => CenterGeneralBloc(
       createCenterusecase: sl<CreateCenterusecase>(),
+    ),
+  );
+  sl.registerFactory(
+    () => CenterCoursesBloc(
       addCourseUsecase: sl<AddCourseUsecase>(),
       getCenterCoursesUsecase: sl<GetCenterCoursesUsecase>(),
       updateCourseUsecase: sl<UpdateCourseUsecase>(),
       deleteCourseUsecase: sl<DeleteCourseUsecase>(),
     ),
   );
-  sl.registerFactory(
-    () =>
-        TrainerBloc(createTrainerUsecase: sl<CreateTrainerUsecase>()),
-  );
+
+  // sl.registerFactory(
+  //   () =>
+  //       TrainerBloc(createTrainerUsecase: sl<CreateTrainerUsecase>()),
+  // );
 }

@@ -21,7 +21,8 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     // uncomment this to stop auto sign in
-     FirebaseAuth.instance.signOut();
+    FirebaseAuth.instance.signOut();
+    print("done sugn out");
     super.initState();
     // Fade-in the center image
     Future.delayed(const Duration(milliseconds: 500), () {
@@ -104,6 +105,15 @@ class _SplashPageState extends State<SplashPage> {
             ), // if role is not stu or center (by accident)
           );
         }
+      }
+      //! for the problem(when adding trainer , we make an account for him , change it when you make page for him or when trainer clean arch is done)
+      else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const AuthWidget(doRegister: false),
+          ), // after done evry thing in home page swip it to => AuthChoicePage
+        );
       }
     } else {
       Navigator.pushReplacement(

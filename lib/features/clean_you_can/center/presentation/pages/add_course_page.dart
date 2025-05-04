@@ -3,9 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grad_project_ver_1/core/colors/app_color.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_event.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bloc/center_state.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_courses_bloc/center_courses_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_event.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_state.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
 import 'package:animate_do/animate_do.dart';
 
@@ -179,9 +180,12 @@ class _AddCoursePageState extends State<AddCoursePage> {
                       const SizedBox(height: 20),
                       FadeInUp(
                         delay: Duration(milliseconds: 450),
-                        child: BlocBuilder<CenterBloc, CenterState>(
+                        child: BlocBuilder<
+                          CenterCoursesBloc,
+                          CenterCoursesState
+                        >(
                           builder: (context, state) {
-                            if (state is CenterLoadingState) {
+                            if (state is CenterCoursesLoadingState) {
                               return Center(
                                 child: CircularProgressIndicator(
                                   color: mainColor,
@@ -265,11 +269,11 @@ class _AddCoursePageState extends State<AddCoursePage> {
                                         0,
                                     courseId: '',
                                   );
-                                  context.read<CenterBloc>().add(
-                                    AddCourseEvent(
-                                      addCourseEntity: course,
-                                    ),
-                                  );
+                                  context
+                                      .read<CenterCoursesBloc>()
+                                      .add(
+                                        AddCourseEvent(addCourseEntity: course)
+                                      );
                                 },
                               ),
                             );

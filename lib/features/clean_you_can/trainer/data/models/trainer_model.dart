@@ -5,7 +5,7 @@ class TrainerModel extends TrainerEntity {
     required super.uid,
     required super.name,
     required super.email,
-    required super.password,
+
     required super.phone,
     required super.imageUrl,
     required super.coursesIds,
@@ -29,7 +29,6 @@ class TrainerModel extends TrainerEntity {
       uid: json['uid'] as String,
       name: json['name'] as String,
       email: json['email'] as String,
-      password: json['password'] as String,
       phone: json['phone'] as String,
       imageUrl: json['imageUrl'] as String?,
       coursesIds: List<String>.from(json['coursesIds'] ?? []),
