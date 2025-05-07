@@ -55,7 +55,7 @@ class AuthDataSource {
       }
       final userData = userDoc.data() as Map<String, dynamic>;
       final role = userData['role'] ?? 'student';
-     
+
       bool isCompletedInfo =
           userData['isCompletedInfo'] ??
           false; // fetch bool is completed the info from firestore if it was by any way null ,then its false
@@ -135,7 +135,7 @@ class AuthDataSource {
           email: user.email ?? "",
           isVerified: user.emailVerified,
           role: fetchData,
-          isCompletedInfo: false,
+          isCompletedInfo: role == "Trainers" ? true : false,
         ),
       );
     } on FirebaseAuthException catch (e) {

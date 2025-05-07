@@ -13,6 +13,7 @@ import 'package:grad_project_ver_1/features/auth/presintation/pages/forgot_pass_
 import 'package:grad_project_ver_1/features/auth/presintation/pages/user_type_selection.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/center_dashboard_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/pages/student_dashboard.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/trainer/presintation/pages/trainer_dashboard.dart';
 
 class AuthWidget extends StatefulWidget {
   final bool doRegister;
@@ -55,8 +56,11 @@ class _AuthWidgetState extends State<AuthWidget> {
       final userRole = state.authUser.role;
       // isVerified means that user recieved email verification  and verified the email
       if (state.authUser.isVerified) {
+        if(userRole=="Trainer"){
+          Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => TrainerDashboardPage(),));
+        
         // isCompletedInfo  means if user completed the info like name , location ,phone number and so on
-        if (state.authUser.isCompletedInfo!) {
+      } else if ( state.authUser.isCompletedInfo!) {
           // ignore: avoid_print
           print(
             "************************************************************************************************************************ role now  is $userRole",
@@ -87,6 +91,7 @@ class _AuthWidgetState extends State<AuthWidget> {
           );
         }
       } else {
+        if(userRole=="Trainer"){Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => TrainerDashboardPage(),));}
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(

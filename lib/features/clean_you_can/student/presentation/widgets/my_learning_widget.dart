@@ -75,13 +75,13 @@ class MyLearningWidget extends StatelessWidget {
                       ? [
                         CourseEntity(
                           courseId: "courseId",
-                          title: " title",
+                          title: " there is no course",
                           description: "description",
                           centerId: "centerId",
                           startDate: DateTime.now(),
                           endDate: DateTime.now(),
                           maxStudents: 55,
-                          price: 98,
+                          price: 98, trainerId: 'no trainer',
                         ),
                       ]
                       : filteredCourses,

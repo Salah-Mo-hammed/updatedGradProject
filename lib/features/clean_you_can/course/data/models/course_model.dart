@@ -5,6 +5,7 @@ class CourseModel extends CourseEntity {
   
   CourseModel({
     required super.courseId,
+    required super.trainerId,
     required super.title,
     required super.description,
     required super.centerId,
@@ -24,6 +25,8 @@ class CourseModel extends CourseEntity {
     title: json['title'] as String,
     description: json['description'] as String,
     centerId: json['centerId'] as String,
+    trainerId: json['trainerId'] as String,
+
     price: (json['price'] as num).toDouble(),
     enrolledStudents: (json['enrolledStudents'] as List<dynamic>?)
             ?.map((e) => e as String)
@@ -45,6 +48,7 @@ class CourseModel extends CourseEntity {
   Map<String, dynamic> toJson() {
     return {
       'courseId': courseId,
+      'trainerId': trainerId,
       'title': title,
       'description': description,
       'centerId': centerId,
@@ -64,6 +68,7 @@ class CourseModel extends CourseEntity {
     String? title,
     String? description,
     String? centerId,
+    String? trainerId,
     double? price,
     Set<String>? enrolledStudents,
     DateTime? startDate,
@@ -77,6 +82,7 @@ class CourseModel extends CourseEntity {
       title: title ?? this.title,
       description: description ?? this.description,
       centerId: centerId ?? this.centerId,
+      trainerId: trainerId ?? this.trainerId,
       price: price ?? this.price,
       enrolledStudents: enrolledStudents ?? this.enrolledStudents,
       startDate: startDate ?? this.startDate,

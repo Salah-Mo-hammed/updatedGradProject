@@ -5,6 +5,7 @@ import 'package:grad_project_ver_1/core/colors/app_color.dart';
 import 'package:grad_project_ver_1/features/auth/presintation/widgets/auth_widget.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/center_dashboard_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/pages/student_dashboard.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/trainer/presintation/pages/trainer_dashboard.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -21,7 +22,7 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     // uncomment this to stop auto sign in
-    FirebaseAuth.instance.signOut();
+     FirebaseAuth.instance.signOut();
     print("done sugn out");
     super.initState();
     // Fade-in the center image
@@ -95,7 +96,17 @@ class _SplashPageState extends State<SplashPage> {
                   (context) => CenterDashboard(centerId: user.uid),
             ),
           );
-        } else {
+        } else if(role=="Trainer"){
+          Navigator.pushReplacement(
+            // ignore: use_build_context_synchronously
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => const TrainerDashboardPage(),
+            ), // if role is not stu or center (by accident)
+          );
+        }
+         else {
           Navigator.pushReplacement(
             // ignore: use_build_context_synchronously
             context,

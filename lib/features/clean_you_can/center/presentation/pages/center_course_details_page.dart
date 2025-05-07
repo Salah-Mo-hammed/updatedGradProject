@@ -6,17 +6,19 @@ import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bl
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/edit_course_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/pages/confirm_enrollment_page.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/trainer/domain/entities/trainer_entity.dart';
 
 class CourseDetailsPage extends StatelessWidget {
   final bool isStudent;
   final String? studentId;
   final CourseEntity course;
-
+  final List<TrainerEntity>? trainers;
   const CourseDetailsPage({
     super.key,
     required this.course,
     required this.isStudent,
     this.studentId,
+    this.trainers,
   });
 
   @override
@@ -33,7 +35,7 @@ class CourseDetailsPage extends StatelessWidget {
         backgroundColor: Colors.blueAccent,
         centerTitle: true,
         actions: [
-          if (isStudent) ...[
+          if (!isStudent) ...[
             IconButton(
               icon: const Icon(Icons.delete, color: Colors.white),
               onPressed: () {
@@ -49,7 +51,10 @@ class CourseDetailsPage extends StatelessWidget {
                   context,
                   MaterialPageRoute(
                     builder:
-                        (context) => EditCoursePage(course: course),
+                        (context) => EditCoursePage(
+                          course: course,
+                          availableTrainers: trainers!,
+                        ),
                   ),
                 );
               },

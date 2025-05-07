@@ -1,5 +1,7 @@
 class CourseEntity {
   final String courseId;
+  final String trainerId;
+
   final String title;
   final String description;
   final String? imageUrl;
@@ -12,6 +14,7 @@ class CourseEntity {
   final DateTime endDate;
   CourseEntity({
     required this.courseId,
+    required this.trainerId,
     required this.title,
     required this.description,
     required this.centerId,

@@ -4,17 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grad_project_ver_1/core/colors/app_color.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_courses_bloc/center_courses_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_event.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_state.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
 import 'package:animate_do/animate_do.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/trainer/domain/entities/trainer_entity.dart';
 
 // ignore: must_be_immutable
 class AddCoursePage extends StatefulWidget {
   String centerId;
-
-  AddCoursePage({super.key, required this.centerId});
+List<TrainerEntity> availableTrainers;
+  AddCoursePage({super.key, required this.centerId,required this.availableTrainers});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -32,10 +30,10 @@ class _AddCoursePageState extends State<AddCoursePage> {
       TextEditingController();
   final TextEditingController imageUrlController =
       TextEditingController();
-
+String? selectedTrainerId;
+String? selectedTrainerName;
   DateTime? startDate;
   DateTime? endDate;
-
   Future<void> _selectDate(
     BuildContext context,
     bool isStartDate,
@@ -177,6 +175,33 @@ class _AddCoursePageState extends State<AddCoursePage> {
                           icon: Icons.image,
                         ),
                       ),
+                      ElevatedButton(
+  onPressed: () async {
+    final result = await showModalBottomSheet<String>(
+      context: context,
+      builder: (context) {
+        return ListView(
+          children: widget.availableTrainers.map((trainer) {
+            return ListTile(
+              title: Text(trainer.name),
+              onTap: () {
+                selectedTrainerName=trainer.name;
+                Navigator.pop(context, trainer.uid,);
+              },
+            );
+          }).toList(),
+        );
+      },
+    );
+
+    if (result != null) {
+      setState(() {
+        selectedTrainerId = result;
+      });
+    }
+  },
+  child: Text(selectedTrainerName ?? 'اختر المدرب'),
+),
                       const SizedBox(height: 20),
                       FadeInUp(
                         delay: Duration(milliseconds: 450),
@@ -267,7 +292,7 @@ class _AddCoursePageState extends State<AddCoursePage> {
                                           priceController.text,
                                         ) ??
                                         0,
-                                    courseId: '',
+                                    courseId: '', trainerId: selectedTrainerId!,
                                   );
                                   context
                                       .read<CenterCoursesBloc>()

@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_courses_bloc/center_courses_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_event.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/trainer/domain/entities/trainer_entity.dart';
 
 class EditCoursePage extends StatefulWidget {
   final CourseEntity course;
-
-  const EditCoursePage({super.key, required this.course});
+  List<TrainerEntity> availableTrainers;
+  EditCoursePage({
+    super.key,
+    required this.course,
+    required this.availableTrainers,
+  });
 
   @override
   _EditCoursePageState createState() => _EditCoursePageState();
@@ -23,7 +26,8 @@ class _EditCoursePageState extends State<EditCoursePage> {
   late TextEditingController _maxStudentsController;
   late DateTime _startDate;
   late DateTime _endDate;
-
+  String? selectedTrainerId;
+  String? selectedTrainerName;
   @override
   void initState() {
     super.initState();
@@ -114,6 +118,34 @@ class _EditCoursePageState extends State<EditCoursePage> {
                 _endDate,
                 () => _selectDate(context, false),
               ),
+              ElevatedButton(
+                onPressed: () async {
+                  final result = await showModalBottomSheet<String>(
+                    context: context,
+                    builder: (context) {
+                      return ListView(
+                        children:
+                            widget.availableTrainers.map((trainer) {
+                              return ListTile(
+                                title: Text(trainer.name),
+                                onTap: () {
+                                  selectedTrainerName = trainer.name;
+                                  Navigator.pop(context, trainer.uid);
+                                },
+                              );
+                            }).toList(),
+                      );
+                    },
+                  );
+
+                  if (result != null) {
+                    setState(() {
+                      selectedTrainerId = result;
+                    });
+                  }
+                },
+                child: Text(selectedTrainerName ?? 'اختر المدرب'),
+              ),
 
               const SizedBox(height: 24),
               ElevatedButton(
@@ -132,10 +164,9 @@ class _EditCoursePageState extends State<EditCoursePage> {
                         widget.course.enrolledStudents, // نفس الطلاب
                     topics: widget.course.topics, // نفس المواضيع
                     imageUrl: widget.course.imageUrl,
-                    centerId:
-                        widget
-                            .course
-                            .centerId, // نفس الصورة لو كانت موجودة
+                    centerId: widget.course.centerId,
+                    trainerId:
+                        selectedTrainerId!, 
                   );
 
                   context.read<CenterCoursesBloc>().add(

@@ -10,7 +10,7 @@ class CenterTrainerBloc
   FetchCenterTrainersUsecase fetchCenterTrainersUsecase;
   CreateTrainerUsecase createTrainerUsecase;
   CenterTrainerBloc({required this.fetchCenterTrainersUsecase,required this.createTrainerUsecase})
-    : super(const CenterTrainerInitialState()) {
+    : super( CenterTrainerInitialState()) {
     on<FetchCenterTrainers>(onFetchCenterTrainers);
     on<CreateTrainerEvent>(onCreateCenter);
 

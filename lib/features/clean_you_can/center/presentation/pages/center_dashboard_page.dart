@@ -11,10 +11,12 @@ import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bl
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/add_course_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/add_trainer_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/center_course_details_page.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/trainer/domain/entities/trainer_entity.dart';
 
 class CenterDashboard extends StatefulWidget {
   final String centerId;
-  const CenterDashboard({super.key, required this.centerId});
+ late List<TrainerEntity> availableTrainers;
+   CenterDashboard({super.key, required this.centerId});
 
   @override
   _CenterDashboardState createState() => _CenterDashboardState();
@@ -145,7 +147,7 @@ class _CenterDashboardState extends State<CenterDashboard> {
               MaterialPageRoute(
                 builder:
                     (context) =>
-                        AddCoursePage(centerId: widget.centerId),
+                        AddCoursePage(centerId: widget.centerId,availableTrainers:widget.availableTrainers),
               ),
             );
           },
@@ -300,7 +302,7 @@ class _CenterDashboardState extends State<CenterDashboard> {
                                           ) => CourseDetailsPage(
                                             course:
                                                 state.courses[index],
-                                            isStudent: true,
+                                            isStudent: false,trainers: widget.availableTrainers,
                                           ),
                                     ),
                                   );
@@ -480,7 +482,8 @@ class _CenterDashboardState extends State<CenterDashboard> {
             child: BlocBuilder<CenterTrainerBloc, CenterTrainerState>(
               builder: (context, state) {
                 if (state is CenterGotTrainersState) {
-                  final currentTrainers = state.trainers;
+                  final   currentTrainers = state.trainers;
+                widget.availableTrainers=state.trainers;
                   if (currentTrainers.isEmpty) {
                     return Center(
                       child: Text(

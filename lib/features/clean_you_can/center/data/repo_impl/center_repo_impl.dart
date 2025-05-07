@@ -44,7 +44,7 @@ class CenterRepoImpl implements CenterRepo {
       startDate: courseEntity.startDate,
       endDate: courseEntity.endDate,
       topics: courseEntity.topics,
-      maxStudents: courseEntity.maxStudents,
+      maxStudents: courseEntity.maxStudents, trainerId: courseEntity.trainerId,
     );
     return centerDataSource.addCourse(courseModel);
   }
@@ -82,7 +82,7 @@ class CenterRepoImpl implements CenterRepo {
       startDate: courseEntity.startDate,
       endDate: courseEntity.endDate,
       topics: courseEntity.topics,
-      maxStudents: courseEntity.maxStudents,
+      maxStudents: courseEntity.maxStudents, trainerId: courseEntity.trainerId,
     );
     return centerDataSource.updateCourse(courseModel);
   }

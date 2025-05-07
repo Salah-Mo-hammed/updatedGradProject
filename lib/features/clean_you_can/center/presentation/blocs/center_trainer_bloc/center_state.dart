@@ -1,11 +1,12 @@
 import 'package:grad_project_ver_1/features/clean_you_can/trainer/domain/entities/trainer_entity.dart';
 
 abstract class CenterTrainerState {
-  const CenterTrainerState();
+  List<TrainerEntity>? currenttrainers;
+   CenterTrainerState({this .currenttrainers});
 }
 
 class CenterTrainerInitialState extends CenterTrainerState {
-  const CenterTrainerInitialState();
+   CenterTrainerInitialState();
 }
 class CenterTrainerCreatedState extends CenterTrainerState {
   String newTrainerUid;

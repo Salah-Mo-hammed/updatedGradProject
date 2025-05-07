@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:grad_project_ver_1/core/common/continue_info.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/trainer/presintation/pages/trainer_dashboard.dart';
 
 // ignore: must_be_immutable
 class EmailVerificationPage extends StatefulWidget {
@@ -57,7 +58,8 @@ class _EmailVerificationPageState
   void _navigateToDashboard() {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      Navigator.pushReplacement(
+      if(widget.role=="Trainer"){Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => TrainerDashboardPage(),));}
+     else {Navigator.pushReplacement(
         context,
         MaterialPageRoute(
           builder:
@@ -67,7 +69,7 @@ class _EmailVerificationPageState
                 email: user.email.toString(),
               ),
         ),
-      );
+      );}
     }
   }
 

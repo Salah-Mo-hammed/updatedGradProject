@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:grad_project_ver_1/core/errors/failure.dart';
+import 'package:grad_project_ver_1/features/auth/data/source/remote/auth_data_source.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/data/models/center_model.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/course/data/models/course_model.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/data/models/student_model.dart';
@@ -11,33 +12,79 @@ import 'package:grad_project_ver_1/features/clean_you_can/trainer/data/models/tr
 import 'package:grad_project_ver_1/features/clean_you_can/trainer/domain/entities/trainer_entity.dart';
 
 class CenterDataSource {
-  final _firebaseAuth= FirebaseAuth.instance;
+  // final _firebaseAuth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
   //! center_trainer_bloc deal with this
+Future<Either<Failure, String>> createTrainer(TrainerModel newTrainer,String password)async{
+  try {
+final doneCreating=await AuthDataSource().registerUser(newTrainer.email, password, "Trainer");
+print("*********************************** doneCreating happend");
+if(doneCreating.isLeft()){
+  final failure= doneCreating.fold((isLeft)=>isLeft.message,(r)=>null);
+  return Left(AuthFailure(failure!));
+}
+final user= doneCreating.fold((ifLeft)=>null, (isRight)=>isRight);
+final uid=user!.uid;
+await _firestore.collection("Trainers").doc(uid).set(newTrainer.toJson(uid));
+    return Right(uid);
+  }on FirebaseException catch (e) {
+      return Left(
+        AuthFailure(
+          "${e.code}: ${e.message} from trainer FirebaseException",
+        ),
+      );
+    } catch (e) {
+      return Left(
+        AuthFailure('An unexpected error occurred from trainer: $e'),
+      );
+    }
+}
 
-   Future<Either<Failure, String>> createTrainer(TrainerModel newTrainer,String password) async {
+ /*
+ old createtrainer
+   Future<Either<Failure, String>> createTrainer(
+    TrainerModel newTrainer,
+    String password,
+  ) async {
     try {
       // Create user with email and password in Firebase Authentication
-      UserCredential userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
-        email: newTrainer.email,
-        password: password,
-      );
+      UserCredential userCredential = await _firebaseAuth
+          .createUserWithEmailAndPassword(
+            email: newTrainer.email,
+            password: password,
+          );
 
       // Get the generated UID
       String generetedId = userCredential.user!.uid;
 
       // Save trainer info in Firestore under the "Trainers" collection
-      await _firestore.collection('Trainers').doc(generetedId).set(newTrainer.toJson(generetedId));
+      await _firestore
+          .collection('Trainers')
+          .doc(generetedId)
+          .set(newTrainer.toJson(generetedId));
 
       return Right(generetedId);
     } on FirebaseAuthException catch (e) {
-      return Left(AuthFailure( "${e.code}: ${e.message} from trainer FirebaseAuthException"));
+      return Left(
+        AuthFailure(
+          "${e.code}: ${e.message} from trainer FirebaseAuthException",
+        ),
+      );
     } on FirebaseException catch (e) {
-      return Left(AuthFailure( "${e.code}: ${e.message} from trainer FirebaseException"));
+      return Left(
+        AuthFailure(
+          "${e.code}: ${e.message} from trainer FirebaseException",
+        ),
+      );
     } catch (e) {
-      return Left(AuthFailure( 'An unexpected error occurred from trainer: $e'));
+      return Left(
+        AuthFailure('An unexpected error occurred from trainer: $e'),
+      );
     }
   }
+
+  */
+
   Future<Either<Failure, List<TrainerEntity>>> fetchCenterTrainers(
     String centerId,
   ) async {
@@ -77,7 +124,8 @@ class CenterDataSource {
       );
     }
   }
-//! center_general_bloc deal with this
+
+  //! center_general_bloc deal with this
   Future<Either<Failure, void>> createCenter(
     CenterModel newCenter,
   ) async {
@@ -99,7 +147,8 @@ class CenterDataSource {
       return Left(ServerFailure(e.toString()));
     }
   }
-//! center_course_bloc deal with those
+
+  //! center_course_bloc deal with those
   Future<Either<Failure, CourseModel>> addCourse(
     CourseModel courseModel,
   ) async {
@@ -155,6 +204,7 @@ class CenterDataSource {
           .doc(courseModel.courseId.toString())
           .update({
             'centerId': courseModel.centerId,
+            'trainerId': courseModel.trainerId,
             'courseId': courseModel.courseId,
             'description': courseModel.description,
             'endDate': courseModel.endDate,
