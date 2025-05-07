@@ -4,7 +4,7 @@
 
 // @Collection()
 // class StudentCollection {
-// Id id=Isar.autoIncrement;
+// Id id=Isar.autFoIncrement;
 //   late String studentId;
 //   late String name;
 //   late String email;

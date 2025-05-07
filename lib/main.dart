@@ -9,6 +9,7 @@ import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bl
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/trainer/presintation/bloc/trainer_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/trainer/presintation/pages/trainer_dashboard.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/trainer/presintation/widgets/chat.dart';
 import 'package:grad_project_ver_1/firebase_options.dart';
 import 'package:grad_project_ver_1/injection_container.dart';
 
@@ -41,7 +42,7 @@ class MyApp extends StatelessWidget {
         ),
         // BlocProvider<TrainerBloc>(create: (_) => sl<TrainerBloc>()),
       ],
-      child: MaterialApp(home: SplashPage()),
+      child: MaterialApp(home: Basic()),
     );
   }
 }

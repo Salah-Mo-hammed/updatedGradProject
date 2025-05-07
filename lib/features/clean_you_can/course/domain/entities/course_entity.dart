@@ -1,7 +1,6 @@
 class CourseEntity {
   final String courseId;
   final String trainerId;
-
   final String title;
   final String description;
   final String? imageUrl;
