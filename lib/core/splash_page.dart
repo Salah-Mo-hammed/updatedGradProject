@@ -22,7 +22,8 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     // uncomment this to stop auto sign in
-     FirebaseAuth.instance.signOut();
+  
+   // FirebaseAuth.instance.signOut();
     print("done sugn out");
     super.initState();
     // Fade-in the center image
@@ -72,7 +73,10 @@ class _SplashPageState extends State<SplashPage> {
       if (userDoc.exists) {
         final userData = userDoc.data();
         final role = userData?['role'];
-        if (role == "student") {
+        
+        final isCompletedInfo = userData?['isCompletedInfo'];
+
+        if (role == "student" && isCompletedInfo==true) {
           // ignore: avoid_print
           print(
             "**********************************************************************************************************  user id in splash page is ${userData!['userId']}",
@@ -87,7 +91,7 @@ class _SplashPageState extends State<SplashPage> {
                   ),
             ),
           );
-        } else if (role == "center") {
+        } else if (role == "center"&& isCompletedInfo==true) {
           Navigator.pushReplacement(
             // ignore: use_build_context_synchronously
             context,
@@ -96,17 +100,15 @@ class _SplashPageState extends State<SplashPage> {
                   (context) => CenterDashboard(centerId: user.uid),
             ),
           );
-        } else if(role=="Trainer"){
+        } else if (role == "Trainer"&& isCompletedInfo==true) {
           Navigator.pushReplacement(
             // ignore: use_build_context_synchronously
             context,
             MaterialPageRoute(
-              builder:
-                  (context) => const TrainerDashboardPage(),
+              builder: (context) => const TrainerDashboardPage(),
             ), // if role is not stu or center (by accident)
           );
-        }
-         else {
+        } else {
           Navigator.pushReplacement(
             // ignore: use_build_context_synchronously
             context,

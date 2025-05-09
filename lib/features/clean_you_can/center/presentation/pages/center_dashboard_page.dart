@@ -5,18 +5,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:animate_do/animate_do.dart';
 import 'package:grad_project_ver_1/core/colors/app_color.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_courses_bloc/center_courses_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_general_bloc/center_general_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_event.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_state.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/add_course_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/add_trainer_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/center_course_details_page.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/edit_center_profil_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/trainer/domain/entities/trainer_entity.dart';
 
 class CenterDashboard extends StatefulWidget {
   final String centerId;
- late List<TrainerEntity> availableTrainers;
-   CenterDashboard({super.key, required this.centerId});
+  late List<TrainerEntity> availableTrainers;
+  CenterDashboard({super.key, required this.centerId});
 
   @override
   _CenterDashboardState createState() => _CenterDashboardState();
@@ -146,8 +148,10 @@ class _CenterDashboardState extends State<CenterDashboard> {
               context,
               MaterialPageRoute(
                 builder:
-                    (context) =>
-                        AddCoursePage(centerId: widget.centerId,availableTrainers:widget.availableTrainers),
+                    (context) => AddCoursePage(
+                      centerId: widget.centerId,
+                      availableTrainers: widget.availableTrainers,
+                    ),
               ),
             );
           },
@@ -302,7 +306,10 @@ class _CenterDashboardState extends State<CenterDashboard> {
                                           ) => CourseDetailsPage(
                                             course:
                                                 state.courses[index],
-                                            isStudent: false,trainers: widget.availableTrainers,
+                                            isStudent: false,
+                                            trainers:
+                                                widget
+                                                    .availableTrainers,
                                           ),
                                     ),
                                   );
@@ -346,40 +353,484 @@ class _CenterDashboardState extends State<CenterDashboard> {
   Widget _buildProfilePage() {
     return FadeIn(
       duration: const Duration(milliseconds: 520),
-      child: Center(
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          elevation: 6,
-          color: const Color(0xFFF7EEDD),
-          shadowColor: AppColors.bronze.withOpacity(0.14),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 36,
-              vertical: 35,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.person,
-                  size: 60,
-                  color: AppColors.softBrown,
+      child: BlocBuilder<CenterGeneralBloc, CenterGeneralState>(
+        builder: (context, state) {
+          if (state is CenterGeneralLoadingState) {
+            return const Center(
+              child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  Colors.deepPurple,
                 ),
-                const SizedBox(height: 15),
-                Text(
-                  "Profile Page",
-                  style: TextStyle(
-                    fontSize: 23,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.brown,
+              ),
+            );
+          } else if (state is CenterGeneralGotInfoState) {
+            final info = state.centerInfo;
+            return SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16.0,
+                vertical: 12.0,
+              ),
+              child: Column(
+                children: [
+                  // Profile Card with more compact design
+                  Card(
+                    elevation: 6,
+                    shadowColor: Colors.deepPurple.withOpacity(0.2),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // Avatar
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              // Background circle
+                              Container(
+                                width: 100,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.deepPurple
+                                      .withOpacity(0.1),
+                                ),
+                              ),
+
+                              // Avatar icon
+                              Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 3,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(
+                                        0.08,
+                                      ),
+                                      blurRadius: 8,
+                                      spreadRadius: 1,
+                                    ),
+                                  ],
+                                ),
+                                child: CircleAvatar(
+                                  radius: 42,
+                                  backgroundColor: Colors.deepPurple
+                                      .withOpacity(0.2),
+                                  child: ClipOval(
+                                    child:info.imageUrl== null?Image.asset(
+                                            'assets/images/grad_logo.png',
+                                            width: 84,
+                                            height: 84,
+                                            fit: BoxFit.cover,
+                                          ) :Image.network(
+                                      info.imageUrl!,
+                                      width: 84,
+                                      height: 84,
+                                      fit: BoxFit.cover,
+                                      errorBuilder:
+                                          (
+                                            context,
+                                            error,
+                                            stackTrace,
+                                          ) => Image.asset(
+                                            'assets/images/grad_logo.png',
+                                            width: 84,
+                                            height: 84,
+                                            fit: BoxFit.cover,
+                                          ),
+                                      loadingBuilder: (
+                                        context,
+                                        child,
+                                        loadingProgress,
+                                      ) {
+                                        if (loadingProgress == null)
+                                          return child;
+                                        return Center(
+                                          child: CircularProgressIndicator(
+                                            value:
+                                                loadingProgress
+                                                            .expectedTotalBytes !=
+                                                        null
+                                                    ? loadingProgress
+                                                            .cumulativeBytesLoaded /
+                                                        (loadingProgress
+                                                                .expectedTotalBytes ??
+                                                            1)
+                                                    : null,
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 12),
+
+                          // Center Name
+                          Text(
+                            info.name,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.deepPurple.shade800,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
+
+                  const SizedBox(height: 12),
+
+                  // Info Cards - Using separate cards for each piece of information
+                  // Address Card
+                  _buildInfoCard(
+                    icon: Icons.location_on,
+                    iconColor: Colors.redAccent.shade400,
+                    title: "Address",
+                    content: info.address,
+                    delay: 100,
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  // Email Card
+                  _buildInfoCard(
+                    icon: Icons.email,
+                    iconColor: Colors.blue.shade700,
+                    title: "Email",
+                    content: info.email,
+                    delay: 200,
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  // Phone Card
+                  _buildInfoCard(
+                    icon: Icons.phone,
+                    iconColor: Colors.green.shade600,
+                    title: "Phone Number",
+                    content: info.phoneNumber,
+                    delay: 300,
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // Description Card
+                  FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: Duration(milliseconds: 400),
+                    child: Card(
+                      elevation: 4,
+                      shadowColor: Colors.deepPurple.withOpacity(0.1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.info_outline,
+                                  size: 18,
+                                  color: Colors.deepPurple.shade600,
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  "About Us",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.deepPurple.shade700,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              info.description,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 14,
+                                color: Colors.black87,
+                                height: 1.4,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Edit Profile Button
+                  FadeInUp(
+                    duration: const Duration(milliseconds: 600),
+                    delay: Duration(milliseconds: 500),
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (_) => EditCenterProfilePage(
+                                  centerInfo: info,
+                                ),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.edit, size: 20),
+                      label: const Text("Edit Profile"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 10,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 2,
+                        shadowColor: Colors.deepPurple.withOpacity(
+                          0.3,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Add some bottom padding to ensure space between content and bottom nav bar
+                  const SizedBox(height: 16),
+                ],
+              ),
+            );
+          } else if (state is CenterGeneralExceptionState) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.error_outline,
+                      size: 50,
+                      color: Colors.red.shade700,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      state.message,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.redAccent,
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton.icon(
+                      onPressed: () {
+                        context.read<CenterGeneralBloc>().add(
+                          GetCenterInfoEvent(
+                            centerId: widget.centerId,
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.refresh),
+                      label: const Text("Try Again"),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple,
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            );
+          } else if (state is CenterGeneralInitial ||
+              state is CenterGeneralCreatedState) {
+            context.read<CenterGeneralBloc>().add(
+              GetCenterInfoEvent(centerId: widget.centerId),
+            );
+
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Colors.deepPurple,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  Text(
+                    "Fetching center info...",
+                    style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          } else {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Colors.deepPurple,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    "Fetching center info... Unknown state: $state",
+                    style: const TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  // Helper method to build info cards
+  Widget _buildInfoCard({
+    required IconData icon,
+    required Color iconColor,
+    required String title,
+    required String content,
+    required int delay,
+  }) {
+    return FadeInUp(
+      duration: const Duration(milliseconds: 600),
+      delay: Duration(milliseconds: delay),
+      child: Card(
+        elevation: 4,
+        shadowColor: Colors.deepPurple.withOpacity(0.1),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            vertical: 12,
+            horizontal: 16,
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: iconColor.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(icon, size: 22, color: iconColor),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.grey.shade600,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      content,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.deepPurple.shade900,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
+      ),
+    );
+  }
+
+  // Helper method to build information items
+  Widget _buildInfoItem(
+    IconData icon,
+    Color iconColor,
+    String title,
+    String value,
+  ) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(
+        vertical: 10,
+        horizontal: 15,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 5,
+            spreadRadius: 1,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey.shade600,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Row(
+            children: [
+              Icon(icon, size: 22, color: iconColor),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Text(
+                  value,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.deepPurple.shade900,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -482,8 +933,8 @@ class _CenterDashboardState extends State<CenterDashboard> {
             child: BlocBuilder<CenterTrainerBloc, CenterTrainerState>(
               builder: (context, state) {
                 if (state is CenterGotTrainersState) {
-                  final   currentTrainers = state.trainers;
-                widget.availableTrainers=state.trainers;
+                  final currentTrainers = state.trainers;
+                  widget.availableTrainers = state.trainers;
                   if (currentTrainers.isEmpty) {
                     return Center(
                       child: Text(

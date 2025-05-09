@@ -9,6 +9,7 @@ class CourseEntity {
   final double price;
   Set<String> enrolledStudents;
   List<String> topics;
+  Map<String,dynamic> urls;
   final DateTime startDate;
   final DateTime endDate;
   CourseEntity({
@@ -24,5 +25,6 @@ class CourseEntity {
     this.imageUrl,
     this.enrolledStudents = const {},
     this.topics = const [],
+    this.urls=const {}
   });
 }

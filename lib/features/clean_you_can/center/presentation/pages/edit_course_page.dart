@@ -166,7 +166,7 @@ class _EditCoursePageState extends State<EditCoursePage> {
                     imageUrl: widget.course.imageUrl,
                     centerId: widget.course.centerId,
                     trainerId:
-                        selectedTrainerId!, 
+                        selectedTrainerId!, urls: widget.course.urls, 
                   );
 
                   context.read<CenterCoursesBloc>().add(

@@ -1,5 +1,7 @@
 
 
+import 'package:grad_project_ver_1/features/clean_you_can/student/domain/entities/student_entity.dart';
+
 abstract class StudentState {
    final Map<String,dynamic>? availableCourses;
 
@@ -11,9 +13,6 @@ class StudentInitialState extends StudentState {
 }
 
 class StudentLoadingState extends StudentState {}
-
-class StudentCreatedState extends StudentState {}
-
 class StudentRefreshState extends StudentState {}
 
 class StudentExceptionState extends StudentState {

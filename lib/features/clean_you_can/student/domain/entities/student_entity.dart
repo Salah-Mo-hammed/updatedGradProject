@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/domain/entities/student_coursesEntity.dart';
 
 // ignore: must_be_immutable
 class StudentEntity extends Equatable {
@@ -8,7 +9,8 @@ class StudentEntity extends Equatable {
   String phoneNumber;
   String address;
   String? photoUrl;
-  List<String> registerdCourses;
+  //List<String> registerdCourses;
+  Map<String,StudentCoursesEntity>? courses;
 
   StudentEntity({
     required this.studentId,
@@ -16,8 +18,9 @@ class StudentEntity extends Equatable {
     required this.email,
     required this.phoneNumber,
     required this.address,
+     this.courses,
      this.photoUrl,
-    this.registerdCourses = const [],
+//    this.registerdCourses = const [],
   });
 
   @override
@@ -27,6 +30,7 @@ class StudentEntity extends Equatable {
     phoneNumber,
     address,
     photoUrl,
-    registerdCourses,
+    courses,
+//    registerdCourses,
   ];
 }

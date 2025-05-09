@@ -37,7 +37,7 @@ class CommonWidgets {
   ) {
     return courses.isEmpty
         ? InkWell(
-          child: Center(child: Text("")),
+          child: Center(child: Text(" no courses syudepid student")),
         )
         : InkWell(
           onTap:
@@ -48,7 +48,7 @@ class CommonWidgets {
                       (context) => CourseDetailsPage(
                         studentId: currentStudentId,
                         course: courses[index],
-                        isStudent: false,
+                        isStudent: true,
                       ),
                 ),
               ),
@@ -171,7 +171,7 @@ class CommonWidgets {
         );
   }
 
-  Padding buildStack(bool inCertificates) {
+  Padding buildStack(bool inCertificates ) {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 10.0,

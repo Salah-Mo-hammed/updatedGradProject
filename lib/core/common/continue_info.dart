@@ -4,12 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grad_project_ver_1/core/colors/app_color.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/entities/center_entity.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_general_bloc/center_general_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_event.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/center_dashboard_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/domain/entities/student_entity.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_event.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc/student_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_general_bloc/bloc/student_general_bloc_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/pages/student_dashboard.dart';
 
 class ContinueInfo extends StatefulWidget {
@@ -268,9 +266,9 @@ class _ContinueInfoState extends State<ContinueInfo> {
         name: name,
         email: widget.email,
         phoneNumber: phone,
-        address: address,
+        address: address, courses: {},
       );
-      context.read<StudentBloc>().add(
+      context.read<StudentGeneralBloc>().add(
         CreateStudentEvent(createStudent: createStudent),
       );
       Navigator.push(

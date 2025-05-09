@@ -1,6 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:grad_project_ver_1/core/errors/failure.dart';
-import 'package:grad_project_ver_1/features/auth/data/source/remote/auth_data_source.dart';
+//import 'package:grad_project_ver_1/features/auth/data/source/remote/auth_data_source.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/data/models/center_model.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/data/sources/remote/center_data_source.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/entities/center_entity.dart';
@@ -15,7 +15,7 @@ class CenterRepoImpl implements CenterRepo {
   CenterDataSource centerDataSource;
   CenterRepoImpl({
     required this.centerDataSource,
-    required AuthDataSource authDataSource,
+    //    required AuthDataSource authDataSource,
   });
 
   @override
@@ -44,7 +44,8 @@ class CenterRepoImpl implements CenterRepo {
       startDate: courseEntity.startDate,
       endDate: courseEntity.endDate,
       topics: courseEntity.topics,
-      maxStudents: courseEntity.maxStudents, trainerId: courseEntity.trainerId,
+      maxStudents: courseEntity.maxStudents,
+      trainerId: courseEntity.trainerId,
     );
     return centerDataSource.addCourse(courseModel);
   }
@@ -82,7 +83,8 @@ class CenterRepoImpl implements CenterRepo {
       startDate: courseEntity.startDate,
       endDate: courseEntity.endDate,
       topics: courseEntity.topics,
-      maxStudents: courseEntity.maxStudents, trainerId: courseEntity.trainerId,
+      maxStudents: courseEntity.maxStudents,
+      trainerId: courseEntity.trainerId,
     );
     return centerDataSource.updateCourse(courseModel);
   }
@@ -96,7 +98,8 @@ class CenterRepoImpl implements CenterRepo {
 
   @override
   Future<Either<Failure, String>> createTrainer(
-    TrainerEntity newTrainer,String password
+    TrainerEntity newTrainer,
+    String password,
   ) {
     TrainerModel trainerModel = TrainerModel(
       uid: newTrainer.uid,
@@ -104,9 +107,32 @@ class CenterRepoImpl implements CenterRepo {
       email: newTrainer.email,
       phone: newTrainer.phone,
       imageUrl: newTrainer.imageUrl,
-      coursesIds: newTrainer.coursesIds,
+      coursesId: newTrainer.coursesId,
       centerId: newTrainer.centerId,
     );
-    return centerDataSource.createTrainer(trainerModel,password);
+    return centerDataSource.createTrainer(trainerModel, password);
+  }
+
+  @override
+  Future<Either<Failure, CenterEntity>> getCenterInfo(
+    String centerId,
+  ) {
+    return centerDataSource.getCenterInfo(centerId);
+  }
+
+  @override
+  Future<Either<Failure, void>> updateCenterInfo(
+    CenterEntity updatedCourse,
+  ) {
+    CenterModel centerModel = CenterModel(
+      centerId: updatedCourse.centerId,
+      name: updatedCourse.name,
+      email: updatedCourse.email,
+      phoneNumber: updatedCourse.phoneNumber,
+      address: updatedCourse.address,
+      description: updatedCourse.description,
+      imageUrl: updatedCourse.imageUrl,
+    );
+    return centerDataSource.updateCenterInfo(centerModel);
   }
 }

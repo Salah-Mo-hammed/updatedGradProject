@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/pages/edit_info_page.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc/student_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/pages/student_profile_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/widgets/certificates_widget.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/widgets/my_learning_widget.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/widgets/notifications_widget.dart';
@@ -43,16 +43,12 @@ class _StudentDashboardState extends State<StudentDashboard> {
       default:
         return ShowAvailableCoursesWidget(
           studentId: widget.currentStudentId,
+          
         );
     }
   }
 
-  @override
-  void initState() {
-    
-    //!get the student from the firestore
-    super.initState();
-  }
+ 
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +60,7 @@ class _StudentDashboardState extends State<StudentDashboard> {
         children: [
           SizedBox(height: 40),
           InkWell(
-            onTap: () => Navigator.push(context,MaterialPageRoute(builder: (context) => EditInfoPage(),)),
+            onTap: () => Navigator.push(context,MaterialPageRoute(builder: (context) => StudentProfilePage(studentId:widget.currentStudentId),)),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Card(

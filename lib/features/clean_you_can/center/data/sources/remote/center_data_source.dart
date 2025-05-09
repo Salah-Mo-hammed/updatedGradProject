@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:grad_project_ver_1/core/errors/failure.dart';
 import 'package:grad_project_ver_1/features/auth/data/source/remote/auth_data_source.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/data/models/center_model.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/domain/entities/center_entity.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/course/data/models/course_model.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/data/models/student_model.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/trainer/data/models/trainer_model.dart';
@@ -15,19 +16,40 @@ class CenterDataSource {
   // final _firebaseAuth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
   //! center_trainer_bloc deal with this
-Future<Either<Failure, String>> createTrainer(TrainerModel newTrainer,String password)async{
-  try {
-final doneCreating=await AuthDataSource().registerUser(newTrainer.email, password, "Trainer");
-print("*********************************** doneCreating happend");
-if(doneCreating.isLeft()){
-  final failure= doneCreating.fold((isLeft)=>isLeft.message,(r)=>null);
-  return Left(AuthFailure(failure!));
-}
-final user= doneCreating.fold((ifLeft)=>null, (isRight)=>isRight);
-final uid=user!.uid;
-await _firestore.collection("Trainers").doc(uid).set(newTrainer.toJson(uid));
-    return Right(uid);
-  }on FirebaseException catch (e) {
+  Future<Either<Failure, String>> createTrainer(
+    TrainerModel newTrainer,
+    String password,
+  ) async {
+    try {
+      final doneCreating = await AuthDataSource().registerUser(
+        newTrainer.email,
+        password,
+        "Trainer",
+      );
+      print(
+        "*********************************** doneCreating happend",
+      );
+      if (doneCreating.isLeft()) {
+        final failure = doneCreating.fold(
+          (isLeft) => isLeft.message,
+          (r) => null,
+        );
+        return Left(AuthFailure(failure!));
+      }
+      final user = doneCreating.fold(
+        (ifLeft) => null,
+        (isRight) => isRight,
+      );
+      final uid = user!.uid;
+      await _firestore
+          .collection("Trainers")
+          .doc(uid)
+          .set(newTrainer.toJson(uid));
+      // await _firestore.collection("Users").doc(uid).update({
+      //   "isCompletedInfo": true,
+      // });
+      return Right(uid);
+    } on FirebaseException catch (e) {
       return Left(
         AuthFailure(
           "${e.code}: ${e.message} from trainer FirebaseException",
@@ -38,9 +60,9 @@ await _firestore.collection("Trainers").doc(uid).set(newTrainer.toJson(uid));
         AuthFailure('An unexpected error occurred from trainer: $e'),
       );
     }
-}
+  }
 
- /*
+  /*
  old createtrainer
    Future<Either<Failure, String>> createTrainer(
     TrainerModel newTrainer,
@@ -126,6 +148,58 @@ await _firestore.collection("Trainers").doc(uid).set(newTrainer.toJson(uid));
   }
 
   //! center_general_bloc deal with this
+  Future<Either<Failure, void>> updateCenterInfo(
+    CenterModel updatedCenter,
+  ) async {
+    try {
+      print(
+        "****************************************************************************************************************** image url is  ${updatedCenter.imageUrl}",
+      );
+      await _firestore
+          .collection("Centers")
+          .doc(updatedCenter.centerId)
+          .update({
+            'name': updatedCenter.name,
+            'address': updatedCenter.address,
+            'description': updatedCenter.description,
+            'phoneNumber': updatedCenter.phoneNumber,
+            'imageUrl': updatedCenter.imageUrl,
+          });
+      return Right(unit);
+    } catch (e) {
+      return Left(
+        ServerFailure(
+          "couldnt update the info of center : ${e.toString()}",
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, CenterModel>> getCenterInfo(
+    String centerId,
+  ) async {
+    try {
+      final centerDoc =
+          await _firestore.collection("Centers").doc(centerId).get();
+      if (!centerDoc.exists) {
+        return Left(ServerFailure("Center data not found!!"));
+      }
+      final centerData = centerDoc.data() as Map<String, dynamic>;
+      final centerModel = CenterModel.fromJson(centerData);
+      print(
+        "****************************************************************************************************************** image url in centermodel in getcenter info  is  ${centerModel.imageUrl}",
+      );
+
+      return Right(centerModel);
+    } catch (e) {
+      return Left(
+        ServerFailure(
+          "problem in fetching center data :  ${e.toString()}",
+        ),
+      );
+    }
+  }
+
   Future<Either<Failure, void>> createCenter(
     CenterModel newCenter,
   ) async {
@@ -153,22 +227,32 @@ await _firestore.collection("Trainers").doc(uid).set(newTrainer.toJson(uid));
     CourseModel courseModel,
   ) async {
     try {
+      // إنشاء doc جديد للحصول على id
       final docRef = _firestore.collection('Courses').doc();
-      await docRef.set({});
+      print(
+        "**********************************************************************************************${docRef.id}",
+      );
+
       final newCourseModel = courseModel.copyWith(
         courseId: docRef.id,
-      ); // this to make a copy with new course id , or use the above one
+      );
+      // تحديث المدرب بإضافة الكورس الجديد
+      await _firestore
+          .collection("Trainers")
+          .doc(newCourseModel.trainerId)
+          .update({
+            'coursesId': FieldValue.arrayUnion([
+              newCourseModel.courseId,
+            ]),
+          });
 
+      // إضافة الكورس في الـ collection
       await docRef.set(newCourseModel.toJson());
 
-      return Right(
-        newCourseModel,
-      ); // we make this for future when we want to make local data base but now just save them in firestore
+      return Right(newCourseModel);
     } catch (e) {
       return Left(
-        ServerFailure(
-          "******************************************Faild to create course : ${e.toString()}",
-        ),
+        ServerFailure("Failed to create course: ${e.toString()}"),
       );
     }
   }
@@ -177,8 +261,33 @@ await _firestore.collection("Trainers").doc(uid).set(newTrainer.toJson(uid));
     String courseId,
   ) async {
     try {
+      final courseDoc =
+          await _firestore.collection('Courses').doc(courseId).get();
+      if (!courseDoc.exists) {
+        return Left(ServerFailure("Course Not found "));
+      }
+      final courseData = courseDoc.data() as Map<String, dynamic>;
+      final courseTrainerId = courseData['trainerId'];
+      final enrolledStudents = List<String>.from(
+        courseData['enrolledStudents'] ?? [],
+      );
+      if (enrolledStudents.isNotEmpty) {
+        return Left(
+          ServerFailure(
+            "cant delete this course , there is enroled students",
+          ),
+        );
+      }
       await _firestore.collection('Courses').doc(courseId).delete();
-      return Right("success deleting the course");
+      await _firestore
+          .collection('Trainers')
+          .doc(courseTrainerId)
+          .update({
+            'coursesId': FieldValue.arrayRemove([courseId]),
+          });
+      return Right(
+        "success deleting the course  feom center and the trainer too",
+      );
     } catch (e) {
       return Left(
         ServerFailure(
@@ -216,14 +325,14 @@ await _firestore.collection("Trainers").doc(uid).set(newTrainer.toJson(uid));
             'title': courseModel.title,
             'topics': courseModel.topics,
           });
-      final postData =
-          await _firestore
-              .collection('Courses')
-              .doc(courseModel.courseId.toString())
-              .get();
-      print(
-        "*********************************************************************************************************************************************after fire store the updated course is${postData.data()} ",
-      );
+      // final postData =
+      //     await _firestore
+      //         .collection('Courses')
+      //         .doc(courseModel.courseId.toString())
+      //         .get();
+      // print(
+      //   "*********************************************************************************************************************************************after fire store the updated course is${postData.data()} ",
+      // );
 
       return const Right("Course update successfully");
     } catch (e) {

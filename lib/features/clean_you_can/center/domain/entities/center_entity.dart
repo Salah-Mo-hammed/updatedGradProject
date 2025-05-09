@@ -9,6 +9,8 @@ class CenterEntity extends Equatable {
   final String description;
   final Set<int> coursesId;
   final String? licenseUrl;
+  final String? imageUrl;
+
 
   const CenterEntity({
     required this.centerId,
@@ -19,6 +21,7 @@ class CenterEntity extends Equatable {
     required this.description,
     this.coursesId = const {},
     this.licenseUrl,
+    this.imageUrl
   });
 
   @override
@@ -31,5 +34,6 @@ class CenterEntity extends Equatable {
     description,
     coursesId.toSet(),
     licenseUrl,
+  imageUrl,
   ];
 }

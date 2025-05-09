@@ -6,12 +6,14 @@ abstract class StudentRepo {
   Future<Either<Failure, void>> createStudent(
     StudentEntity newStudent,
   );
+   Future<Either<Failure, void>> updateStudentInfo(StudentEntity updateStudent);
+   Future<Either<Failure, StudentEntity>> getStudentInfo(String studentId);
+
   Future<Either<Failure, Map<String,dynamic>>>
   getAVaialableAndMineCourses(String studentId);
   Future<Either<Failure, Unit>> enrollInCourse(
     String studentId,
     String courseId,
   );
-  // Future<Either<Failure, void>> updateStudentInfo(StudentEntity newStudent);
   //(future proparaty) Future<Either<Failure, void>> deleteStudent(int studentId);
 }

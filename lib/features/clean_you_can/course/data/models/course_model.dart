@@ -11,6 +11,7 @@ class CourseModel extends CourseEntity {
     required super.centerId,
     required super.price,
     super.enrolledStudents = const {},
+    super.urls = const {},
     required super.startDate,
     required super.endDate,
     required super.topics,
@@ -41,6 +42,7 @@ class CourseModel extends CourseEntity {
     topics: List<String>.from(json['topics'] ?? []),
     imageUrl: json['imageUrl'] as String?,
     maxStudents: json['maxStudents'] as int,
+    urls:Map<String,dynamic>.from(json['urls']??{})
   );
 }
 
@@ -59,6 +61,7 @@ class CourseModel extends CourseEntity {
       'topics': topics,
       'imageUrl': imageUrl,
       'maxStudents': maxStudents,
+      'urls':urls,
     };
   }
 
@@ -76,6 +79,7 @@ class CourseModel extends CourseEntity {
     List<String>? topics,
     String? imageUrl,
     int? maxStudents,
+    Map<String,dynamic>? urls,
   }) {
     return CourseModel(
       courseId: courseId ?? this.courseId,
@@ -90,6 +94,7 @@ class CourseModel extends CourseEntity {
       topics: topics ?? this.topics,
       imageUrl: imageUrl ?? this.imageUrl,
       maxStudents: maxStudents ?? this.maxStudents,
+      urls:urls ?? this.urls
     );
   }
 }

@@ -19,7 +19,10 @@ abstract class CenterRepo {
   Future<Either<Failure,List<TrainerEntity>>> fetchCenterTrainers(String centerId);
   //! for center_general_bloc
   Future<Either<Failure, void>> createCenter(CenterEntity newCenter);
- // Future<Either<Failure, void>> updatecenter(CenterEntity newCenter);
- // Future<Either<Failure, void>> deletecenter(CenterEntity newCenter);
+  Future<Either<Failure, CenterEntity>> getCenterInfo(String centerId);
+  Future<Either<Failure, void>> updateCenterInfo(CenterEntity updatedCourse);
+
+
+
    
 }

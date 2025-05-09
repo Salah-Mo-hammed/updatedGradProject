@@ -3,7 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc/student_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/widgets/common_widgets.dart';
 
 class MyLearningWidget extends StatelessWidget {
@@ -81,7 +81,7 @@ class MyLearningWidget extends StatelessWidget {
                           startDate: DateTime.now(),
                           endDate: DateTime.now(),
                           maxStudents: 55,
-                          price: 98, trainerId: 'no trainer',
+                          price: 98, trainerId: 'no trainer', urls: {},
                         ),
                       ]
                       : filteredCourses,

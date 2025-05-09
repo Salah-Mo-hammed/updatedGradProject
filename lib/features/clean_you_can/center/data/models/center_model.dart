@@ -11,6 +11,7 @@ class CenterModel extends CenterEntity {
     required super.description,
     super.coursesId = const {},
     super.licenseUrl,
+    super.imageUrl,
   });
 
   factory CenterModel.fromJson(Map<String, dynamic> json) {
@@ -27,6 +28,8 @@ class CenterModel extends CenterEntity {
               .toSet() ??
           {},
       licenseUrl: json['licenseUrl'] as String?,
+      imageUrl: json['imageUrl'] as String?,
+
     );
   }
 
@@ -40,6 +43,7 @@ class CenterModel extends CenterEntity {
       'description': description,
       'coursesId': coursesId.toList(),
       'licenseUrl': licenseUrl,
+      'imageUrl':imageUrl
     };
   }
 

@@ -18,7 +18,9 @@ import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/delete_course_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/fetch_center_trainers_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/get_center_courses_usecase.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/get_center_info_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/get_course_students.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/update_center_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/update_course_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_courses_bloc/center_courses_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_general_bloc/center_general_bloc.dart';
@@ -29,11 +31,14 @@ import 'package:grad_project_ver_1/features/clean_you_can/student/domain/repo/st
 import 'package:grad_project_ver_1/features/clean_you_can/student/domain/usecases/creat_student_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/domain/usecases/enroll_in_course_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/domain/usecases/get_available_courses_usecase.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/domain/usecases/get_student_info_usecase.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/domain/usecases/update_student_data_usecase.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc/student_bloc.dart';
 // import 'package:grad_project_ver_1/features/clean_you_can/trainer/data/repo_impl/trainer_repo_impl.dart';
 // import 'package:grad_project_ver_1/features/clean_you_can/trainer/data/sources/remote/trainer_remote_data_source.dart';
 // import 'package:grad_project_ver_1/features/clean_you_can/trainer/domain/repo/trianer_repo.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/create_trainer_usecase.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_general_bloc/bloc/student_general_bloc_bloc.dart';
 // import 'package:grad_project_ver_1/features/clean_you_can/trainer/presintation/bloc/trainer_bloc.dart';
 
 GetIt sl = GetIt.instance;
@@ -59,7 +64,7 @@ Future<void> initialaizedDependencies() async {
   );
   sl.registerSingleton<CenterRepo>(
     CenterRepoImpl(
-      authDataSource: sl<AuthDataSource>(),
+      //   authDataSource: sl<AuthDataSource>(),
       centerDataSource: sl<CenterDataSource>(),
     ),
   );
@@ -90,7 +95,9 @@ Future<void> initialaizedDependencies() async {
   sl.registerSingleton<CreatStudentUsecase>(
     CreatStudentUsecase(studentRepo: sl<StudentRepo>()),
   );
-
+  sl.registerSingleton<UpdateStudentDataUsecase>(
+    UpdateStudentDataUsecase(studentRepo: sl<StudentRepo>()),
+  );
   sl.registerSingleton<CreateCenterusecase>(
     CreateCenterusecase(centerRepo: sl<CenterRepo>()),
   );
@@ -116,12 +123,24 @@ Future<void> initialaizedDependencies() async {
   sl.registerSingleton<EnrollInCourseUsecase>(
     EnrollInCourseUsecase(studentRepo: sl<StudentRepo>()),
   );
+  sl.registerSingleton<GetStudentInfoUsecase>(
+    GetStudentInfoUsecase(studentRepo: sl<StudentRepo>()),
+  );
+
   sl.registerSingleton<CreateTrainerUsecase>(
     CreateTrainerUsecase(centerRepo: sl<CenterRepo>()),
   );
   sl.registerSingleton<FetchCenterTrainersUsecase>(
     FetchCenterTrainersUsecase(centerRepo: sl<CenterRepo>()),
   );
+  sl.registerSingleton<GetCenterInfoUsecase>(
+    GetCenterInfoUsecase(centerRepo: sl<CenterRepo>()),
+  );
+
+  sl.registerSingleton<UpdatedCenterInfoUsecase>(
+    UpdatedCenterInfoUsecase(centerRepo: sl<CenterRepo>()),
+  );
+
   //! blocs
 
   sl.registerFactory<AuthBloc>(
@@ -135,10 +154,18 @@ Future<void> initialaizedDependencies() async {
   );
   sl.registerFactory(
     () => StudentBloc(
-      creatStudentUsecase: sl<CreatStudentUsecase>(),
+      
       getAvailableCoursesUsecase:
           sl<GetAvailableAndMineCoursesUsecase>(),
       enrollInCourseUsecase: sl<EnrollInCourseUsecase>(),
+    ),
+  );
+  sl.registerFactory(
+    () => StudentGeneralBloc(
+       creatStudentUsecase: sl<CreatStudentUsecase>(),
+      updateStudentDataUsecase: sl<UpdateStudentDataUsecase>(),
+      getStudentInfoUsecase: sl<GetStudentInfoUsecase>(),
+
     ),
   );
   sl.registerFactory(
@@ -151,6 +178,8 @@ Future<void> initialaizedDependencies() async {
   sl.registerFactory(
     () => CenterGeneralBloc(
       createCenterusecase: sl<CreateCenterusecase>(),
+      getCenterInfoUsecase: sl<GetCenterInfoUsecase>(),
+      updatedCenterInfoUsecase: sl<UpdatedCenterInfoUsecase>(),
     ),
   );
   sl.registerFactory(

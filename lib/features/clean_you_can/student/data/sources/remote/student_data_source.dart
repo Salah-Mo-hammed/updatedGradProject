@@ -8,16 +8,67 @@ import 'package:grad_project_ver_1/features/clean_you_can/student/domain/entitie
 class WithFirebase {
   final _firestore = FirebaseFirestore.instance;
 
+  Future<Either<Failure, StudentModel>> getStudentInfo(
+    String studentId,
+  ) async {
+    try {
+      final studentDoc =
+          await _firestore
+              .collection("Students")
+              .doc(studentId)
+              .get();
+      if (!studentDoc.exists) {
+        return Left(ServerFailure("no stduent with this id"));
+      }
+      final studentData = studentDoc.data() as Map<String, dynamic>;
+      final studentInfo = StudentModel.fromJson(studentData);
+      return Right(studentInfo);
+    } catch (e) {
+      return Left(
+        ServerFailure(
+          "couldnt get the info of studnet : ${e.toString()}",
+        ),
+      );
+    }
+  }
+
+  Future<Either<Failure, void>> updateStudentInfo(
+    StudentModel updatedStudent,
+  ) async {
+    try {
+      await _firestore
+          .collection("Students")
+          .doc(updatedStudent.studentId)
+          .update({
+            'name': updatedStudent.name,
+            'address': updatedStudent.address,
+            'phoneNumber': updatedStudent.phoneNumber,
+            'photoUrl': updatedStudent.photoUrl,
+          });
+      return Right(unit);
+    } catch (e) {
+      return Left(
+        ServerFailure(
+          "couldnt update the info of studnet : ${e.toString()}",
+        ),
+      );
+    }
+  }
+
   Future<Either<Failure, StudentEntity>> getstudentInfo(
     String studentUid,
   ) async {
     try {
+      print(studentUid);
       final studentSnapshot =
           await _firestore
               .collection("Students")
               .doc(studentUid)
               .get();
+      print(" done snapshot ");
       if (!studentSnapshot.exists || studentSnapshot.data() == null) {
+        print(" INSIDE IF SNAPSHOT ? ");
+
         return Left(
           ServerFailure("there is no student with this uid"),
         );
@@ -25,11 +76,12 @@ class WithFirebase {
       final studentData =
           studentSnapshot.data() as Map<String, dynamic>;
       StudentModel fechedStudent = StudentModel.fromJson(studentData);
+      print(" done student data ${fechedStudent.name} ");
       return Right(fechedStudent);
     } catch (e) {
       return Left(
         ServerFailure(
-          "problem in student data source in getstudent Info",
+          "problem in student data source in getstudent Info : ${e.toString()}",
         ),
       );
     }
@@ -51,9 +103,12 @@ class WithFirebase {
       //fetch registredCourses IDs from the student and save it in List<String>
       final studentData =
           studentSnashot.data() as Map<String, dynamic>;
-      List<String> registedCourses = List<String>.from(
-        studentData['registeredCourses'] ?? [],
-      );
+      // List<String> registedCourses = List<String>.from(
+      //   studentData['registeredCourses'] ?? [],
+      // );
+      Map<String, dynamic> studentCourses =
+          studentData['courses'] ?? {};
+      List<String> registedCourses = studentCourses.keys.toList();
       // this just to fetch all the courses from the Courses collection
       final snapshot = await _firestore.collection("Courses").get();
       final allCourses =
@@ -110,21 +165,21 @@ class WithFirebase {
         }
         // if we arrive here , that means there is data (there is student and course)
         //so we get the data  under this comment
-        final studentData = studentSnap.data()!;
+        // final studentData = studentSnap.data()!;
         final courseData = courseSnap.data()!;
         // we make them in List for registedCourses and Set for enrolled students
-        final List<String> registeredCourses = List<String>.from(
-          studentData['registeredCourses'] ?? [],
-        );
+        // final List<String> registeredCourses = List<String>.from(
+        //   studentData['registeredCourses'] ?? [],8
+        // );
         final Set<String> enrolledStudents = Set<String>.from(
           courseData['enrolledStudents'] ?? [],
         );
 
         // check if the courseId isnt previously exsist in the registedCourses
         // so we added it
-        if (!registeredCourses.contains(courseId)) {
-          registeredCourses.add(courseId);
-        }
+        // if (!registeredCourses.contains(courseId)) {
+        //   registeredCourses.add(courseId);8
+        // }
 
         // checks if the student isnt previously exsist in the registedCourses
         // so we added it
@@ -134,10 +189,18 @@ class WithFirebase {
         // here we update the data in firebase ,
         // note the deffeirenses between  registeredCourses.add(courseId); and 'registeredCourses': registeredCourses,
         // is the first one add it to the value and the second we send the value to firestore
+        // transaction.update(studentRef, {
+        //   'registeredCourses': registeredCourses,8
+        // });
         transaction.update(studentRef, {
-          'registeredCourses': registeredCourses,
+          'courses.$courseId': {
+            'courseId': courseId,
+            'status': 'enrolled',
+            'progress': 0,
+            'assignments': {},
+            'result': null,
+          },
         });
-
         transaction.update(courseRef, {
           'enrolledStudents': enrolledStudents.toList(),
         });

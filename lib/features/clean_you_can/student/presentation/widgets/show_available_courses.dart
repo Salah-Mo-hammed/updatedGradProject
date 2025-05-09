@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_event.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_state.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc/student_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc/student_event.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc/student_state.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/widgets/common_widgets.dart';
 
 class ShowAvailableCoursesWidget extends StatefulWidget {
@@ -27,6 +27,12 @@ class _ShowAvailableCoursesWidgetState
     " Buisness",
     "Health",
   ];
+
+  int calculateWeeksBetween(DateTime startDate, DateTime endDate) {
+    final duration = endDate.difference(startDate);
+    return (duration.inDays / 7)
+        .round(); // Use .ceil() if you want to always round up
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -83,56 +89,148 @@ class _ShowAvailableCoursesWidgetState
               ),
             ),
           ),
-          //! stack for featured course image
-          SliverToBoxAdapter(
-            child: CommonWidgets().buildStack(false),
-          ),
-          //! recent courses row
-          SliverToBoxAdapter(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                CommonWidgets().buildHeaderText(
-                  "Recent Courses",
-                  true,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 5,
-                  ),
-                  child: Text(
-                    "View All",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 15,
-                      color: Colors.blue[600],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
+
           //!  List of Cards
           BlocBuilder<StudentBloc, StudentState>(
             builder: (context, state) {
               if (state is StudentGotAvailableAndHisCoursesState) {
                 final allCourses = state.allCourses;
-                List<CourseEntity> availableCourses = allCourses['allCourses'];
+                List<CourseEntity> availableCourses =
+                    allCourses['allCourses'];
                 return SliverList(
-                  delegate: SliverChildBuilderDelegate((
-                    context,
-                    index,
-                  ) {
+                  delegate: SliverChildListDelegate([
+                    /// Featured course
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0,
+                        vertical: 12,
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Stack(
+                          children: [
+                            Image.network(
+                              availableCourses[0].imageUrl != null
+                                  ? availableCourses[0].imageUrl!
+                                  : "https://imgs.search.brave.com/U28_uzPVMomWetZlrjIlA0d0B32pFcxYeKM1GKMOGGY/rs:fit:500:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTQw/MDA1ODIyOS9waG90/by9wcm9ncmVzcy1i/YXItd2l0aC10aGUt/d29yZHMtbmV3LXNr/aWxsLWxvYWRpbmct/ZWR1Y2F0aW9uLWNv/bmNlcHQtaGF2aW5n/LWEtZ29hbC1vbmxp/bmUtbGVhcm5pbmcu/anBnP3M9NjEyeDYx/MiZ3PTAmaz0yMCZj/PVdkaHZvdWxXQ2th/WTBzNU95U3VKNW9y/VURFblQ1MkxzUHpV/MW51NkdWbXM9",
+                              width: double.infinity,
+                              height: 200,
+                              fit: BoxFit.cover,
+                            ),
+                            Positioned.fill(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      Colors.transparent,
+                                      Colors.black.withOpacity(0.6),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 65,
+                              left: 15,
+                              child: Text(
+                                "Featured",
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 40,
+                              left: 15,
+                              child: Text(
+                                availableCourses[0].title,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 20,
+                              left: 15,
+                              child: Row(
+                                children: [
+                                  Icon(
+                                    Icons.person_outline,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    "${availableCourses[0].enrolledStudents.length} Students",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Icon(
+                                    Icons.access_time,
+                                    color: Colors.white,
+                                    size: 16,
+                                  ),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    "${calculateWeeksBetween(availableCourses[0].startDate, availableCourses[0].endDate)} weeks",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
 
-                    return CommonWidgets().buildCourseCard(
-                      widget.studentId,
-                      availableCourses,
+                    /// Header for recent courses
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 5,
+                      ),
+                      child: Row(
+                        mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                        children: [
+                          CommonWidgets().buildHeaderText(
+                            "Recent Courses",
+                            true,
+                          ),
+                          Text(
+                            "View All",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              color: Colors.blue[600],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    /// Course cards
+                    ...List.generate(availableCourses.length, (
                       index,
-                      false,
-                      context,
-                    );
-                  }, childCount: availableCourses.length),
+                    ) {
+                      return CommonWidgets().buildCourseCard(
+                        widget.studentId,
+                        availableCourses,
+                        index,
+                        false,
+                        context,
+                      );
+                    }),
+                  ]),
                 );
               } else if (state is StudentExceptionState) {
                 return SliverToBoxAdapter(

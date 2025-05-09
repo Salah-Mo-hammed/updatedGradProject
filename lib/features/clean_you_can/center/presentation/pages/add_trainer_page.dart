@@ -118,7 +118,7 @@ class AddTrainerPage extends StatelessWidget {
 
                 phone: phoneController.text,
                 imageUrl: null,
-                coursesIds: [],
+                coursesId: [],
                 centerId: centerId,
               );
               context.read<CenterTrainerBloc>().add(

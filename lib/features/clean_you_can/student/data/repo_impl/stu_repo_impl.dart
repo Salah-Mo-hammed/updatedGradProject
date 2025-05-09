@@ -18,8 +18,8 @@ class StudentRepoImpl implements StudentRepo {
       email: newStudent.email,
       phoneNumber: newStudent.phoneNumber,
       address: newStudent.address,
-      photoUrl: newStudent.photoUrl,
-      registerdCourses: newStudent.registerdCourses,
+      photoUrl: newStudent.photoUrl, courses: {},
+//      registerdCourses: newStudent.registerdCourses,
     );
     return studentDataSource.createStudent(studentModel);
   }
@@ -32,5 +32,25 @@ class StudentRepoImpl implements StudentRepo {
   @override
   Future<Either<Failure, Unit>> enrollInCourse(String studentId, String courseId) {
     return studentDataSource.enrollInCourse(studentId, courseId);
+  }
+  
+  @override
+  Future<Either<Failure, void>> updateStudentInfo(StudentEntity newStudent) {
+     StudentModel studentModel = StudentModel(
+      studentId: newStudent.studentId,
+      name: newStudent.name,
+      email: newStudent.email,
+      phoneNumber: newStudent.phoneNumber,
+      address: newStudent.address,
+      photoUrl: newStudent.photoUrl,
+       courses: {},
+//      registerdCourses: newStudent.registerdCourses,
+    );
+    return studentDataSource.updateStudentInfo(studentModel); 
+  }
+  
+  @override
+  Future<Either<Failure, StudentEntity>> getStudentInfo(String studentId) {
+    return studentDataSource.getstudentInfo(studentId);
   }
 }

@@ -8,7 +8,7 @@ class TrainerModel extends TrainerEntity {
 
     required super.phone,
     required super.imageUrl,
-    required super.coursesIds,
+    required super.coursesId,
     required super.centerId,
   });
 
@@ -20,7 +20,7 @@ class TrainerModel extends TrainerEntity {
       'email': email,
       'phone': phone,
       'imageUrl': imageUrl,
-      'coursesIds': coursesIds,
+      'coursesId': coursesId,
     };
   }
 
@@ -31,8 +31,8 @@ class TrainerModel extends TrainerEntity {
       email: json['email'] as String,
       phone: json['phone'] as String,
       imageUrl: json['imageUrl'] as String?,
-      coursesIds: List<String>.from(json['coursesIds'] ?? []),
-      centerId: json['centerId']as String,
+      coursesId: List<String>.from(json['coursesId'] ?? []),
+      centerId: json['centerId'] as String,
     );
   }
 }
