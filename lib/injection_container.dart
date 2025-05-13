@@ -13,6 +13,7 @@ import 'package:grad_project_ver_1/features/auth/presintation/bloc/auth_bloc.dar
 import 'package:grad_project_ver_1/features/clean_you_can/center/data/repo_impl/center_repo_impl.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/data/sources/remote/center_data_source.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/repo/center_repo.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/add_course_session_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/create_centerusecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/create_course_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/delete_course_usecase.dart';
@@ -140,6 +141,9 @@ Future<void> initialaizedDependencies() async {
   sl.registerSingleton<UpdatedCenterInfoUsecase>(
     UpdatedCenterInfoUsecase(centerRepo: sl<CenterRepo>()),
   );
+  sl.registerSingleton<AddCourseSessionUsecase>(
+    AddCourseSessionUsecase(centerRepo: sl<CenterRepo>()),
+  );
 
   //! blocs
 
@@ -154,7 +158,6 @@ Future<void> initialaizedDependencies() async {
   );
   sl.registerFactory(
     () => StudentBloc(
-      
       getAvailableCoursesUsecase:
           sl<GetAvailableAndMineCoursesUsecase>(),
       enrollInCourseUsecase: sl<EnrollInCourseUsecase>(),
@@ -162,10 +165,9 @@ Future<void> initialaizedDependencies() async {
   );
   sl.registerFactory(
     () => StudentGeneralBloc(
-       creatStudentUsecase: sl<CreatStudentUsecase>(),
+      creatStudentUsecase: sl<CreatStudentUsecase>(),
       updateStudentDataUsecase: sl<UpdateStudentDataUsecase>(),
       getStudentInfoUsecase: sl<GetStudentInfoUsecase>(),
-
     ),
   );
   sl.registerFactory(
@@ -188,6 +190,7 @@ Future<void> initialaizedDependencies() async {
       getCenterCoursesUsecase: sl<GetCenterCoursesUsecase>(),
       updateCourseUsecase: sl<UpdateCourseUsecase>(),
       deleteCourseUsecase: sl<DeleteCourseUsecase>(),
+      addCourseSessionUsecase: sl<AddCourseSessionUsecase>(),
     ),
   );
 

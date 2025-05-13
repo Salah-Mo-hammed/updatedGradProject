@@ -13,6 +13,7 @@ abstract class CenterRepo {
   Future<Either<Failure, List<CourseEntity>>> getCenterCourses(
     String centerId,
   );// each course entity have parameter called center (center who own the course)
+  Future<Either<Failure, String>> addCourseSession(String courseId,String sessionTitle, String sessionUrl);
   Future<Either<Failure, List<StudentEntity>>> getCourseStudents(int courseId);//! HERE CHANGE IT TO String 
    //! for center_trainers_bloc
    Future<Either<Failure,String>> createTrainer(TrainerEntity newTrainer,String password);

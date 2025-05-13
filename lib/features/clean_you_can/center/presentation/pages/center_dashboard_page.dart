@@ -303,14 +303,15 @@ class _CenterDashboardState extends State<CenterDashboard> {
                                       builder:
                                           (
                                             context,
-                                          ) => CourseDetailsPage(
-                                            course:
-                                                state.courses[index],
-                                            isStudent: false,
-                                            trainers:
-                                                widget
-                                                    .availableTrainers,
-                                          ),
+                                          ) =>CourseDetailsForCenter(course: state.courses[index], trainers: widget.availableTrainers) 
+                                          // CourseDetailsPage(
+                                          //   course:
+                                          //       state.courses[index],
+                                          //   isStudent: false,
+                                          //   trainers:
+                                          //       widget
+                                          //           .availableTrainers,
+                                          // ),
                                     ),
                                   );
                                 },

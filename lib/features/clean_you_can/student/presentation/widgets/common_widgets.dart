@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/center_course_details_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/pages/course_details_for_student_page.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/pages/course_sessions_page.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/pages/enrolled_course_content_page.dart';
 
 class CommonWidgets {
   // available courses or recent courses
@@ -41,17 +44,28 @@ class CommonWidgets {
         )
         : InkWell(
           onTap:
-              () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (context) => CourseDetailsPage(
-                        studentId: currentStudentId,
-                        course: courses[index],
-                        isStudent: true,
+              () =>
+                  !inMyLearning
+                      ? Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) => CourseDetailsForStudent(
+                                course: courses[index],
+                                studentId: currentStudentId,
+                                // isInMyLearning: inMyLearning,
+                              ),
+                        ),
+                      )
+                      : Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) => CourseSessionsPage(
+                                courseUrls: courses[index].urls,
+                              ),
+                        ),
                       ),
-                ),
-              ),
           child: Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
@@ -171,7 +185,7 @@ class CommonWidgets {
         );
   }
 
-  Padding buildStack(bool inCertificates ) {
+  Padding buildStack(bool inCertificates) {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 10.0,

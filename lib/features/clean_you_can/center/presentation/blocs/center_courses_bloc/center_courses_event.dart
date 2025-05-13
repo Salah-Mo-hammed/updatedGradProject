@@ -21,3 +21,11 @@ class GetCenterCoursesEvent extends CenterCoursesEvent {
   String centerId;
   GetCenterCoursesEvent({required this.centerId});
 }
+
+class AddCourseSessionEvent extends CenterCoursesEvent {
+  String courseId;
+  String sessionTitle;
+  String sessionUrl;
+
+  AddCourseSessionEvent({required this.courseId,required this.sessionTitle,required this.sessionUrl});
+}

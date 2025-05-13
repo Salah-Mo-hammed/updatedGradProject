@@ -135,4 +135,9 @@ class CenterRepoImpl implements CenterRepo {
     );
     return centerDataSource.updateCenterInfo(centerModel);
   }
+  
+  @override
+  Future<Either<Failure, String>> addCourseSession(String courseId, String sessionTitle, String sessionUrl) {
+    return centerDataSource.addCourseSession(courseId, sessionTitle, sessionUrl);
+  }
 }

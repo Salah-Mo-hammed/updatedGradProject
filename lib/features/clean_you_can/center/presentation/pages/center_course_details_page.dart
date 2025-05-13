@@ -1,24 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_courses_bloc/center_courses_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_bloc.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_event.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/add_sourse_session_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/edit_course_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
-import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/pages/confirm_enrollment_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/trainer/domain/entities/trainer_entity.dart';
 
-class CourseDetailsPage extends StatelessWidget {
-  final bool isStudent;
-  final String? studentId;
+class CourseDetailsForCenter extends StatelessWidget {
   final CourseEntity course;
-  final List<TrainerEntity>? trainers;
-  const CourseDetailsPage({
+  final List<TrainerEntity> trainers;
+
+  const CourseDetailsForCenter({
     super.key,
     required this.course,
-    required this.isStudent,
-    this.studentId,
-    this.trainers,
+    required this.trainers,
   });
 
   @override
@@ -35,67 +30,29 @@ class CourseDetailsPage extends StatelessWidget {
         backgroundColor: Colors.blueAccent,
         centerTitle: true,
         actions: [
-          if (!isStudent) ...[
-            IconButton(
-              icon: const Icon(Icons.delete, color: Colors.white),
-              onPressed: () {
-                context.read<CenterCoursesBloc>().add(
-                  DeleteCourseEvent(courseId: course.courseId),
-                );
-              },
-            ),
-            IconButton(
-              icon: const Icon(Icons.edit, color: Colors.white),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (context) => EditCoursePage(
-                          course: course,
-                          availableTrainers: trainers!,
-                        ),
-                  ),
-                );
-              },
-            ),
-          ] else ...[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                onTap: () {
-                  //! here go to confirm enrollmet page
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder:
-                          (context) => ConfirmEnrollmentPage(
-                            currentStudentId: studentId!,
-                            selcetedCourse: course,
-                          ),
-                    ),
-                  );
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 5,
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.white,
-                  ),
-                  child: Text(
-                    " Enroll ",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
+          IconButton(
+            icon: const Icon(Icons.delete, color: Colors.white),
+            onPressed: () {
+              context.read<CenterCoursesBloc>().add(
+                DeleteCourseEvent(courseId: course.courseId),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.edit, color: Colors.white),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => EditCoursePage(
+                        course: course,
+                        availableTrainers: trainers,
+                      ),
                 ),
-              ),
-            ),
-          ],
+              );
+            },
+          ),
         ],
       ),
       body: SingleChildScrollView(
@@ -114,11 +71,40 @@ class CourseDetailsPage extends StatelessWidget {
                 ),
               ),
             const SizedBox(height: 16),
-
-            _buildTitle(course.title),
-            _buildDescription(course.description),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    _buildTitle(course.title),
+                    _buildDescription(course.description),
+                  ],
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(.3),
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  width: 150,
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) => AddCourseSessionPage(courseId:course.courseId),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "Add session url",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ),
+              ],
+            ),
             const SizedBox(height: 16),
-
             _buildInfoCard(
               Icons.monetization_on,
               "Price",
@@ -144,7 +130,6 @@ class CourseDetailsPage extends StatelessWidget {
               "Enrolled Students",
               "${course.enrolledStudents.length}",
             ),
-
             const SizedBox(height: 16),
             _buildTopicsSection(),
           ],
@@ -153,53 +138,46 @@ class CourseDetailsPage extends StatelessWidget {
     );
   }
 
-  Widget _buildTitle(String title) {
-    return Text(
-      title,
-      style: const TextStyle(
-        fontSize: 26,
-        fontWeight: FontWeight.bold,
-        color: Colors.black87,
-      ),
-    );
-  }
-
-  Widget _buildDescription(String description) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: Text(
-        description,
-        style: const TextStyle(fontSize: 18, color: Colors.black54),
-      ),
-    );
-  }
-
-  Widget _buildInfoCard(IconData icon, String label, String value) {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      elevation: 4,
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: ListTile(
-        leading: Icon(icon, color: Colors.blueAccent),
-        title: Text(
-          label,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+  Widget _buildTitle(String title) => Text(
+    title,
+    style: const TextStyle(
+      fontSize: 26,
+      fontWeight: FontWeight.bold,
+      color: Colors.black87,
+    ),
+  );
+  Widget _buildDescription(String description) => Padding(
+    padding: const EdgeInsets.only(top: 8.0),
+    child: Text(
+      description,
+      style: const TextStyle(fontSize: 18, color: Colors.black54),
+    ),
+  );
+  Widget _buildInfoCard(IconData icon, String label, String value) =>
+      Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        elevation: 4,
+        margin: const EdgeInsets.symmetric(vertical: 8),
+        child: ListTile(
+          leading: Icon(icon, color: Colors.blueAccent),
+          title: Text(
+            label,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          subtitle: Text(
+            value,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.blueGrey,
+            ),
           ),
         ),
-        subtitle: Text(
-          value,
-          style: const TextStyle(
-            fontSize: 16,
-            color: Colors.blueGrey,
-          ),
-        ),
-      ),
-    );
-  }
+      );
 
   Widget _buildTopicsSection() {
     return Column(
@@ -213,28 +191,32 @@ class CourseDetailsPage extends StatelessWidget {
         course.topics.isNotEmpty
             ? Column(
               children:
-                  course.topics.map((topic) {
-                    return Card(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      elevation: 2,
-                      margin: const EdgeInsets.symmetric(vertical: 4),
-                      child: ListTile(
-                        leading: const Icon(
-                          Icons.check_circle,
-                          color: Colors.green,
-                        ),
-                        title: Text(
-                          topic,
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
+                  course.topics
+                      .map(
+                        (topic) => Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          elevation: 2,
+                          margin: const EdgeInsets.symmetric(
+                            vertical: 4,
+                          ),
+                          child: ListTile(
+                            leading: const Icon(
+                              Icons.check_circle,
+                              color: Colors.green,
+                            ),
+                            title: Text(
+                              topic,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  }).toList(),
+                      )
+                      .toList(),
             )
             : const Center(
               child: Padding(
@@ -249,8 +231,8 @@ class CourseDetailsPage extends StatelessWidget {
     );
   }
 
-  String _formatDate(DateTime? date) {
-    if (date == null) return "Not specified";
-    return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
-  }
+  String _formatDate(DateTime? date) =>
+      date == null
+          ? "Not specified"
+          : "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
 }

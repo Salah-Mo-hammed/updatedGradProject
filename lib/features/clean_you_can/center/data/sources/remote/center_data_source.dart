@@ -422,4 +422,21 @@ class CenterDataSource {
       );
     }
   }
+
+Future<Either<Failure, String>> addCourseSession(
+  String courseId,
+  String sessionTitle,
+  String sessionUrl,
+) async {
+  try {
+    final courseRef = _firestore.collection('Courses').doc(courseId);
+    await courseRef.set({
+      'urls': {sessionTitle: sessionUrl}
+    }, SetOptions(merge: true));
+
+    return right("Session added successfully.");
+  } catch (e) {
+    return left(ServerFailure("Failed to add session: ${e.toString()}"));
+  }
+}
 }

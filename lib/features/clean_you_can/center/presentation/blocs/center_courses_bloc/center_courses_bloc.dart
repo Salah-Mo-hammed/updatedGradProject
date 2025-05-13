@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/add_course_session_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/create_course_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/delete_course_usecase.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/usecases/get_center_courses_usecase.dart';
@@ -17,16 +18,19 @@ class CenterCoursesBloc
   UpdateCourseUsecase updateCourseUsecase;
   GetCenterCoursesUsecase getCenterCoursesUsecase;
   DeleteCourseUsecase deleteCourseUsecase;
+  AddCourseSessionUsecase addCourseSessionUsecase;
   CenterCoursesBloc({
     required this.deleteCourseUsecase,
     required this.updateCourseUsecase,
     required this.addCourseUsecase,
     required this.getCenterCoursesUsecase,
+    required this.addCourseSessionUsecase,
   }) : super(CenterCoursesInitial()) {
     on<AddCourseEvent>(onAddCourse);
     on<GetCenterCoursesEvent>(onGetCenterCourses);
     on<UpdateCourseEvent>(onUpdateCourse);
     on<DeleteCourseEvent>(onDeleteCourse);
+    on<AddCourseSessionEvent>(onAddCourseSession);
   }
 
   FutureOr<void> onAddCourse(
@@ -92,6 +96,28 @@ class CenterCoursesBloc
       },
       (success) {
         emit(CenterCoursesInitial());
+      },
+    );
+  }
+
+  FutureOr<void> onAddCourseSession(
+    AddCourseSessionEvent event,
+    Emitter<CenterCoursesState> emit,
+  ) async {
+    emit(CenterCoursesLoadingState());
+    final result = await addCourseSessionUsecase.call(
+      event.courseId,
+      event.sessionTitle,
+      event.sessionUrl,
+    );
+    result.fold(
+      (failure) {
+        emit(CenterCoursesExceptionState(message: failure.message));
+      },
+      (successMessage) {
+        emit(
+          CenterCourseAddedSession(successMessage: successMessage),
+        );
       },
     );
   }

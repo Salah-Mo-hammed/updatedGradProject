@@ -25,7 +25,10 @@ class CenterCoursesExceptionState extends CenterCoursesState {
   final String message;
   CenterCoursesExceptionState({required this.message});
 }
-
+class CenterCourseAddedSession extends CenterCoursesState {
+  final String successMessage;
+  CenterCourseAddedSession({required this.successMessage});
+}
 class CenterCoursesLoadingState extends CenterCoursesState {}
 
 class CenterGotCoursesState extends CenterCoursesState {
