@@ -1,32 +1,42 @@
-// import 'dart:async';
+import 'dart:async';
 
-// import 'package:bloc/bloc.dart';
-// import 'package:equatable/equatable.dart';
-// import 'package:grad_project_ver_1/features/clean_you_can/trainer/domain/entities/trainer_entity.dart';
-// import 'package:grad_project_ver_1/features/clean_you_can/trainer/domain/usecases/create_trainer_usecase.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/trainer/domain/usecases/get_trainer_info_usecase.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/trainer/domain/usecases/get_triener_courses_usecase.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/trainer/presintation/bloc/trainer_event.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/trainer/presintation/bloc/trainer_state.dart';
 
-// part 'trainer_event.dart';
-// part 'trainer_state.dart';
 
-// class TrainerBloc extends Bloc<TrainerEvent, TrainerState> {
-//   CreateTrainerUsecase createTrainerUsecase;
-//   TrainerBloc({required this.createTrainerUsecase})
-//     : super(TrainerLoadingState()) {
-//     on<CreateTrainerEvent>(onCreateTrainer);
-//   }
 
-//   FutureOr<void> onCreateTrainer(
-//     CreateTrainerEvent event,
-//     Emitter<TrainerState> emit,
-//   ) async {
-//     final result = await createTrainerUsecase(event.newTrainer);
-//     result.fold(
-//       (failure) {
-//         emit(TrainerExceptionState(errorMessage: failure.message));
-//       },
-//       (uid) {
-//         emit(TrainerCreatedState(trainerUid: uid));
-//       },
-//     );
-//   }
-// }
+class TrainerBloc extends Bloc<TrainerEvent, TrainerState> {
+  GetTrienerCoursesUsecase getTrienerCoursesUsecase;
+  GetTrainerInfoUsecase getTrainerInfoUsecase;
+  TrainerBloc({required this.getTrienerCoursesUsecase,required this.getTrainerInfoUsecase})
+    : super(TrainerInitialState()) {
+    on<getTraienrCoursesEvent>(onGetTrainerCourses);
+    on<getTraienrInfoEvent>(onGetTrainerInfo);
+
+  }
+
+  
+
+  FutureOr<void> onGetTrainerCourses(getTraienrCoursesEvent event, Emitter<TrainerState> emit)async {
+    emit(TrainerLoadingState());
+    final result= await getTrienerCoursesUsecase.call(event.trainerId);
+    result.fold((failure){
+      emit(TrainerExceptionState(errorMessage: failure.message));
+    }, (trainerCourses){
+      emit(TrainerGotHisCoursesState(trainerCourses: trainerCourses));
+    });
+  }
+
+  FutureOr<void> onGetTrainerInfo(getTraienrInfoEvent event, Emitter<TrainerState> emit)async {
+     emit(TrainerLoadingState());
+    final result= await getTrainerInfoUsecase.call(event.trainerId);
+    result.fold((failure){
+      emit(TrainerExceptionState(errorMessage: failure.message));
+    }, (trainer){
+      emit(TrainerGotHisInfoState(trainer: trainer));
+    });
+  }
+}

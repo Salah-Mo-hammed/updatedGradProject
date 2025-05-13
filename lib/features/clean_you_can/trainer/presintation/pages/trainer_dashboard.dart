@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/trainer/presintation/bloc/trainer_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/trainer/presintation/bloc/trainer_event.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/trainer/presintation/bloc/trainer_state.dart';
 
 class TrainerDashboardPage extends StatelessWidget {
-  const TrainerDashboardPage({super.key});
+  String trainerId;
+  TrainerDashboardPage({super.key, required this.trainerId});
 
   @override
   Widget build(BuildContext context) {
@@ -106,33 +111,64 @@ class TrainerDashboardPage extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Course List
-            _buildCourseCard(
-              context,
-              title: 'Flutter UI Mastery',
-              badgeText: 'Popular',
-              students: '120 Students',
-              updated: 'Updated 3 days ago',
-              progress: 0.7,
-            ),
-            const SizedBox(height: 16),
-            _buildCourseCard(
-              context,
-              title: 'Flutter Logic',
-              badgeText: 'Popular',
-              students: '120 Students',
-              updated: 'Updated 3 days ago',
-              progress: 0.7,
-            ),
-            const SizedBox(height: 16),
-            _buildCourseCard(
-              context,
+            BlocBuilder<TrainerBloc, TrainerState>(
+              builder: (context, state) {
+                if (state is TrainerInitialState) {
+                  context.read<TrainerBloc>().add(
+                    getTraienrInfoEvent(trainerId: trainerId),
+                  );
 
-              title: 'Advanced Dart',
-              badgeText: 'New',
-              students: '65 Students',
-              updated: 'Updated 1 week ago',
-              progress: 0.4,
+                  return const Center(
+                    child: Text(
+                      'Welcome! Please wait while we load your data.',
+                    ),
+                  );
+                } else if (state is TrainerLoadingState) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (state is TrainerGotHisInfoState) {
+                  print(
+                    " *********************** welcom ${state.trainer.name}",
+                  );
+                  context.read<TrainerBloc>().add(
+                    getTraienrCoursesEvent(trainerId: trainerId),
+                  );
+                  return Center(
+                    child: Text("welcom ${state.trainer.name}"),
+                  );
+                } else if (state is TrainerGotHisCoursesState) {
+                  final courses = state.trainerCourses;
+                  return Column(
+                    children:
+                        courses.map((course) {
+                          return Column(
+                            children: [
+                              _buildCourseCard(
+                                context,
+                                title: course.title,
+                                // badgeText: course.badgeText,
+                                students:
+                                    '${course.enrolledStudents.length} Students',
+                                // updated: 'Updated ${course.updated}',
+                                // progress: course.progress,
+                              ),
+                              const SizedBox(height: 16),
+                            ],
+                          );
+                        }).toList(),
+                  );
+                } else if (state is TrainerExceptionState) {
+                  return Center(
+                    child: Text(
+                      state.errorMessage,
+                      style: const TextStyle(color: Colors.red),
+                    ),
+                  );
+                } else {
+                  return const SizedBox.shrink();
+                }
+              },
             ),
           ],
         ),
@@ -186,10 +222,10 @@ class TrainerDashboardPage extends StatelessWidget {
     BuildContext context, {
 
     required String title,
-    required String badgeText,
+    // required String badgeText,
     required String students,
-    required String updated,
-    required double progress,
+    // required String updated,
+    // required double progress,
   }) {
     return Card(
       shape: RoundedRectangleBorder(
@@ -230,7 +266,7 @@ class TrainerDashboardPage extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Text(
-                        badgeText,
+                        "badgeText",
                         style: const TextStyle(color: Colors.indigo),
                       ),
                     ),
@@ -238,12 +274,12 @@ class TrainerDashboardPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '$students • $updated',
+                  '$students • "updated 90 days"',
                   style: const TextStyle(color: Colors.grey),
                 ),
                 const SizedBox(height: 12),
                 LinearProgressIndicator(
-                  value: progress,
+                  value: 7,
                   backgroundColor: Colors.grey.shade300,
                 ),
                 const SizedBox(height: 12),

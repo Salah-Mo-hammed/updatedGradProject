@@ -56,11 +56,19 @@ class _AuthWidgetState extends State<AuthWidget> {
       final userRole = state.authUser.role;
       // isVerified means that user recieved email verification  and verified the email
       if (state.authUser.isVerified) {
-        if(userRole=="Trainer"){
-          Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => TrainerDashboardPage(),));
-        
-        // isCompletedInfo  means if user completed the info like name , location ,phone number and so on
-      } else if ( state.authUser.isCompletedInfo!) {
+        if (userRole == "Trainer") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => TrainerDashboardPage(
+                    trainerId: state.authUser.uid,
+                  ),
+            ),
+          );
+
+          // isCompletedInfo  means if user completed the info like name , location ,phone number and so on
+        } else if (state.authUser.isCompletedInfo!) {
           // ignore: avoid_print
           print(
             "************************************************************************************************************************ role now  is $userRole",
@@ -74,7 +82,9 @@ class _AuthWidgetState extends State<AuthWidget> {
                           ? CenterDashboard(
                             centerId: state.authUser.uid,
                           )
-                          : StudentDashboard(currentStudentId: state.authUser.uid,),
+                          : StudentDashboard(
+                            currentStudentId: state.authUser.uid,
+                          ),
             ),
           );
         } else {
@@ -91,7 +101,17 @@ class _AuthWidgetState extends State<AuthWidget> {
           );
         }
       } else {
-        if(userRole=="Trainer"){Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => TrainerDashboardPage(),));}
+        if (userRole == "Trainer") {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (context) => TrainerDashboardPage(
+                    trainerId: state.authUser.uid,
+                  ),
+            ),
+          );
+        }
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(

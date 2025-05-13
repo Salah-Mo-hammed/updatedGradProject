@@ -23,7 +23,7 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     // uncomment this to stop auto sign in
 
-     FirebaseAuth.instance.signOut();
+   //  FirebaseAuth.instance.signOut();
     print("done sugn out");
     super.initState();
     // Fade-in the center image
@@ -105,7 +105,7 @@ class _SplashPageState extends State<SplashPage> {
             // ignore: use_build_context_synchronously
             context,
             MaterialPageRoute(
-              builder: (context) => const TrainerDashboardPage(),
+              builder: (context) =>  TrainerDashboardPage(trainerId: user.uid,),
             ), // if role is not stu or center (by accident)
           );
         } else {

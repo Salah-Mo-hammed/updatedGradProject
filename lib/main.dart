@@ -8,6 +8,7 @@ import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bl
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/blocs/center_trainer_bloc/center_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_bloc/student_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/bloc/student_general_bloc/bloc/student_general_bloc_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/trainer/presintation/bloc/trainer_bloc.dart';
 import 'package:grad_project_ver_1/firebase_options.dart';
 import 'package:grad_project_ver_1/injection_container.dart';
 
@@ -29,7 +30,9 @@ class MyApp extends StatelessWidget {
       providers: [
         BlocProvider<AuthBloc>(create: (_) => sl<AuthBloc>()),
         BlocProvider<StudentBloc>(create: (_) => sl<StudentBloc>()),
-        BlocProvider<StudentGeneralBloc>(create: (_) => sl<StudentGeneralBloc>()),
+        BlocProvider<StudentGeneralBloc>(
+          create: (_) => sl<StudentGeneralBloc>(),
+        ),
 
         BlocProvider<CenterTrainerBloc>(
           create: (_) => sl<CenterTrainerBloc>(),
@@ -40,7 +43,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<CenterCoursesBloc>(
           create: (_) => sl<CenterCoursesBloc>(),
         ),
-        // BlocProvider<TrainerBloc>(create: (_) => sl<TrainerBloc>()),
+        BlocProvider<TrainerBloc>(create: (_) => sl<TrainerBloc>()),
       ],
       child: MaterialApp(home: SplashPage()),
     );

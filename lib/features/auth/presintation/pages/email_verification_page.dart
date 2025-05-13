@@ -58,7 +58,7 @@ class _EmailVerificationPageState
   void _navigateToDashboard() {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      if(widget.role=="Trainer"){Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => TrainerDashboardPage(),));}
+      if(widget.role=="Trainer"){Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) => TrainerDashboardPage(trainerId: user.uid,),));}
      else {Navigator.pushReplacement(
         context,
         MaterialPageRoute(

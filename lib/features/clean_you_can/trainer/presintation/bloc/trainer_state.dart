@@ -1,20 +1,24 @@
-// part of 'trainer_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/trainer/domain/entities/trainer_entity.dart';
 
-// sealed class TrainerState extends Equatable {
-//   const TrainerState();
-  
-//   @override
-//   List<Object> get props => [];
-// }
+abstract class TrainerState  {
+  const TrainerState();
+}
 
-// class TrainerLoadingState extends TrainerState {}
-// class TrainerInitial extends TrainerState {}
+class TrainerLoadingState extends TrainerState {}
 
-// class TrainerCreatedState extends TrainerState {
-//   String trainerUid;
-//   TrainerCreatedState({required this.trainerUid});
-// }
-// class TrainerExceptionState extends TrainerState {
-//   final String errorMessage;
-//   TrainerExceptionState({required this.errorMessage});
-// }
+class TrainerInitialState extends TrainerState {}
+
+class TrainerGotHisCoursesState extends TrainerState {
+  List<CourseEntity> trainerCourses;
+  TrainerGotHisCoursesState({required this.trainerCourses});
+}
+
+class TrainerGotHisInfoState extends TrainerState {
+  TrainerEntity trainer;
+  TrainerGotHisInfoState({required this.trainer});
+}
+class TrainerExceptionState extends TrainerState {
+  final String errorMessage;
+  TrainerExceptionState({required this.errorMessage});
+}

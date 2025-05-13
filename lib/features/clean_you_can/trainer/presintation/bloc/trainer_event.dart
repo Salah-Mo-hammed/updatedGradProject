@@ -1,11 +1,17 @@
-// part of 'trainer_bloc.dart';
+import 'package:equatable/equatable.dart';
 
-// sealed class TrainerEvent extends Equatable {
-//   const TrainerEvent();
+sealed class TrainerEvent  {
+  const TrainerEvent();
+}
+class getTraienrCoursesEvent extends TrainerEvent{
+  final String trainerId;
+  getTraienrCoursesEvent({required this.trainerId});
+}
 
-//   @override
-//   List<Object> get props => [];
-// }
+class getTraienrInfoEvent extends TrainerEvent{
+  final String trainerId;
+  getTraienrInfoEvent({required this.trainerId});
+}
 // class CreateTrainerEvent extends TrainerEvent {
 //   final TrainerEntity newTrainer;
 
