@@ -1,6 +1,5 @@
 part of 'chat_bloc.dart';
 
-
 abstract class ChatState extends Equatable {
   @override
   List<Object?> get props => [];
@@ -26,4 +25,11 @@ class ChatError extends ChatState {
 
   @override
   List<Object?> get props => [message];
+}
+
+class ChatRoomsLoaded extends ChatState {
+  final List<ChatRoomEntity> chatRooms;
+  ChatRoomsLoaded({required this.chatRooms});
+  @override
+  List<Object?> get props => [chatRooms];
 }

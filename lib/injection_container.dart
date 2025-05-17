@@ -14,6 +14,7 @@ import 'package:grad_project_ver_1/features/chat/data/repo_impl/chat_repo_impl.d
 import 'package:grad_project_ver_1/features/chat/data/source/chat_remote_data_souce.dart';
 import 'package:grad_project_ver_1/features/chat/domain/repo/chat_repo.dart';
 import 'package:grad_project_ver_1/features/chat/domain/usecases/get_or_create_chat_room_usecase.dart';
+import 'package:grad_project_ver_1/features/chat/domain/usecases/get_trainer_chat_rooms_usecase.dart';
 import 'package:grad_project_ver_1/features/chat/domain/usecases/send_message_usecase.dart';
 import 'package:grad_project_ver_1/features/chat/domain/usecases/stream_messages_usecases.dart';
 import 'package:grad_project_ver_1/features/chat/presintation/bloc/chat_bloc.dart';
@@ -170,11 +171,14 @@ Future<void> initialaizedDependencies() async {
   sl.registerSingleton<GetOrCreateChatRoomUsecase>(
     GetOrCreateChatRoomUsecase(chatRepo: sl<ChatRepo>()),
   );
-    sl.registerSingleton<SendMessageUsecase>(
+  sl.registerSingleton<SendMessageUsecase>(
     SendMessageUsecase(chatRepo: sl<ChatRepo>()),
   );
-      sl.registerSingleton<StreamMessagesUsecases>(
+  sl.registerSingleton<StreamMessagesUsecases>(
     StreamMessagesUsecases(chatRepo: sl<ChatRepo>()),
+  );
+  sl.registerSingleton<GetTrainerChatRoomsUsecase>(
+    GetTrainerChatRoomsUsecase(chatRepo: sl<ChatRepo>()),
   );
   //! blocs
 
@@ -236,6 +240,7 @@ Future<void> initialaizedDependencies() async {
       getOrCreateChatRoom: sl<GetOrCreateChatRoomUsecase>(),
       sendMessage: sl<SendMessageUsecase>(),
       streamMessages: sl<StreamMessagesUsecases>(),
+      getTrainerChatRoomsUsecase: sl<GetTrainerChatRoomsUsecase>(),
     ),
   );
 }

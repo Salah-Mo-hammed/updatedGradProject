@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grad_project_ver_1/features/chat/presintation/pages/trainer_chat_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/center_course_details_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/trainer/presintation/bloc/trainer_bloc.dart';
@@ -249,18 +250,38 @@ class TrainerDashboardPage extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.indigo.shade50,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        "badgeText",
-                        style: const TextStyle(color: Colors.indigo),
+                    InkWell(
+                      onTap:
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => TrainerChatsPage(
+                                    trainerId: trainerId,
+                                  ),
+                            ),
+                          ),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.indigo.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.chat),
+                            SizedBox(width: 5),
+                            Text(
+                              "chats",
+                              style: const TextStyle(
+                                color: Colors.indigo,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],

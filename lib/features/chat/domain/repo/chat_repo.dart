@@ -15,4 +15,7 @@ abstract class ChatRepo {
   });
   // lestin for the messages for this room instintly
   Stream<List<MessageEntity>> streamMessage(String roomId);
+// this ti get the caht rooms for the trainer (trainer has many rooms , room fro each student)
+  Future<List<ChatRoomEntity>> getChatRoomsForTrainer(String trainerId);
+
 }

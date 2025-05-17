@@ -37,3 +37,8 @@ class StartListeningToMessages extends ChatEvent {
   @override
   List<Object?> get props => [roomId];
 }
+
+class GetTrainerChatRoomsEvent extends ChatEvent{
+  final String trianerId;
+  GetTrainerChatRoomsEvent({required this.trianerId});
+}

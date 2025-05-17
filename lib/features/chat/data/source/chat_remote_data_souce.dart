@@ -6,6 +6,18 @@ import 'package:grad_project_ver_1/features/chat/domain/entities/message_entity.
 
 class ChatRemoteDataSource {
   final _firestore = FirebaseFirestore.instance;
+  
+  // Method to get all chat rooms for a specific trainer
+  Future<List<ChatRoomEntity>> getChatRoomsForTrainer(String trainerId) async {
+    final querySnapshot = await _firestore
+        .collection('chat_rooms')
+        .where('trainerId', isEqualTo: trainerId)
+        .get();
+
+    return querySnapshot.docs
+        .map((doc) => ChatRoomModel.fromMap(doc.data(), doc.id))
+        .toList();
+  }
 
   Future<ChatRoomEntity> getOrCreateChatRoom({
     required String studentId,

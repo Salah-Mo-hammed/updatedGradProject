@@ -41,4 +41,9 @@ class ChatRepoImpl implements ChatRepo {
   Stream<List<MessageEntity>> streamMessage(String roomId) {
     return chatRemoteDataSource.streamMessages(roomId);
   }
+  
+  @override
+  Future<List<ChatRoomEntity>> getChatRoomsForTrainer(String trainerId) {
+    return chatRemoteDataSource.getChatRoomsForTrainer(trainerId);
+  }
 }
