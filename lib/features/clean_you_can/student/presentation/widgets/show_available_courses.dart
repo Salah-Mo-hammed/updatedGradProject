@@ -223,11 +223,11 @@ class _ShowAvailableCoursesWidgetState
                       index,
                     ) {
                       return CommonWidgets().buildCourseCard(
-                        widget.studentId,
-                        availableCourses,
-                        index,
-                        false,
-                        context,
+                     currentStudentId:    widget.studentId,
+                   courses:      availableCourses,
+                      index:   index,
+                    inMyLearning:     false,
+                     context:    context,
                       );
                     }),
                   ]),

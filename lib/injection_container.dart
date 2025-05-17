@@ -10,6 +10,13 @@ import 'package:grad_project_ver_1/features/auth/domain/usecases/login_usecase.d
 import 'package:grad_project_ver_1/features/auth/domain/usecases/logout_usecase.dart';
 import 'package:grad_project_ver_1/features/auth/domain/usecases/register_usecase.dart';
 import 'package:grad_project_ver_1/features/auth/presintation/bloc/auth_bloc.dart';
+import 'package:grad_project_ver_1/features/chat/data/repo_impl/chat_repo_impl.dart';
+import 'package:grad_project_ver_1/features/chat/data/source/chat_remote_data_souce.dart';
+import 'package:grad_project_ver_1/features/chat/domain/repo/chat_repo.dart';
+import 'package:grad_project_ver_1/features/chat/domain/usecases/get_or_create_chat_room_usecase.dart';
+import 'package:grad_project_ver_1/features/chat/domain/usecases/send_message_usecase.dart';
+import 'package:grad_project_ver_1/features/chat/domain/usecases/stream_messages_usecases.dart';
+import 'package:grad_project_ver_1/features/chat/presintation/bloc/chat_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/data/repo_impl/center_repo_impl.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/data/sources/remote/center_data_source.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/domain/repo/center_repo.dart';
@@ -61,6 +68,7 @@ Future<void> initialaizedDependencies() async {
   sl.registerSingleton<TrainerRemoteDataSource>(
     TrainerRemoteDataSource(),
   );
+  sl.registerSingleton<ChatRemoteDataSource>(ChatRemoteDataSource());
 
   //! domain-repo but inside it repo impl
   sl.registerSingleton<AuthRepo>(
@@ -79,6 +87,9 @@ Future<void> initialaizedDependencies() async {
     TrainerRepoImpl(
       trainerRemoteDataSource: sl<TrainerRemoteDataSource>(),
     ),
+  );
+  sl.registerSingleton<ChatRepo>(
+    ChatRepoImpl(chatRemoteDataSource: sl<ChatRemoteDataSource>()),
   );
   //! domain-usecases
 
@@ -156,6 +167,15 @@ Future<void> initialaizedDependencies() async {
   sl.registerSingleton<GetTrainerInfoUsecase>(
     GetTrainerInfoUsecase(trianerRepo: sl<TrianerRepo>()),
   );
+  sl.registerSingleton<GetOrCreateChatRoomUsecase>(
+    GetOrCreateChatRoomUsecase(chatRepo: sl<ChatRepo>()),
+  );
+    sl.registerSingleton<SendMessageUsecase>(
+    SendMessageUsecase(chatRepo: sl<ChatRepo>()),
+  );
+      sl.registerSingleton<StreamMessagesUsecases>(
+    StreamMessagesUsecases(chatRepo: sl<ChatRepo>()),
+  );
   //! blocs
 
   sl.registerFactory<AuthBloc>(
@@ -209,6 +229,13 @@ Future<void> initialaizedDependencies() async {
     () => TrainerBloc(
       getTrienerCoursesUsecase: sl<GetTrienerCoursesUsecase>(),
       getTrainerInfoUsecase: sl<GetTrainerInfoUsecase>(),
+    ),
+  );
+  sl.registerFactory(
+    () => ChatBloc(
+      getOrCreateChatRoom: sl<GetOrCreateChatRoomUsecase>(),
+      sendMessage: sl<SendMessageUsecase>(),
+      streamMessages: sl<StreamMessagesUsecases>(),
     ),
   );
 }

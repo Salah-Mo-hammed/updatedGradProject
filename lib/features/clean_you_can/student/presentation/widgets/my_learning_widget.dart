@@ -70,8 +70,8 @@ class MyLearningWidget extends StatelessWidget {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 return CommonWidgets().buildCourseCard(
-                  studentId,
-                  filteredCourses.isEmpty
+              currentStudentId:     studentId,
+               courses:    filteredCourses.isEmpty
                       ? [
                         CourseEntity(
                           courseId: "courseId",
@@ -85,9 +85,10 @@ class MyLearningWidget extends StatelessWidget {
                         ),
                       ]
                       : filteredCourses,
-                  index,
-                  true,
-                  context,
+              index:     index,
+              inMyLearning:     true,
+              context:     context,
+              currentStudentName: "student"
                 );
               },
               childCount:

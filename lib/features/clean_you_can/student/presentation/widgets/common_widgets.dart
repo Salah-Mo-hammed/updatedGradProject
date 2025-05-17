@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grad_project_ver_1/features/chat/presintation/pages/chat_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/center_course_details_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/pages/course_details_for_student_page.dart';
@@ -31,13 +32,14 @@ class CommonWidgets {
     );
   }
 
-  InkWell buildCourseCard(
-    String currentStudentId,
-    List<CourseEntity> courses,
-    int index,
-    bool inMyLearning,
-    BuildContext context,
-  ) {
+  InkWell buildCourseCard({
+    required String currentStudentId,
+    required List<CourseEntity> courses,
+    required int index,
+    required bool inMyLearning,
+    required BuildContext context,
+    String? currentStudentName,
+  }) {
     return courses.isEmpty
         ? InkWell(
           child: Center(child: Text(" no courses syudepid student")),
@@ -179,6 +181,25 @@ class CommonWidgets {
                     ),
                   ),
                 ),
+                if (inMyLearning)
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder:
+                              (context) => ChatPage(
+                                studentId: currentStudentId,
+                                trainerId: courses[index].trainerId,
+                                // courseId: courses[index].courseId,
+                                currentUserId: currentStudentId,
+                                currentUserName: currentStudentName!,
+                              ),
+                        ),
+                      );
+                    },
+                    icon: Icon(Icons.chat),
+                  ),
               ],
             ),
           ),

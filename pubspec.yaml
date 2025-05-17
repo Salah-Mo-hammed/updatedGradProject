@@ -45,10 +45,15 @@ dependencies:
   dio: ^5.8.0+1
   google_fonts: ^6.2.1
   animate_do: ^4.2.0
-  intl: ^0.20.2
+  intl: ^0.18.1
   path_provider: ^2.0.15
-  flutter_chat_ui: ^2.1.1
+  # flutter_chat_ui: ^2.1.1
   url_launcher: ^6.3.1
+  firebase_messaging: ^15.2.5
+  uuid: ^4.5.1
+  flutter_chat_types: ^3.6.2
+  dash_chat_2: ^0.0.20
+  # flutter_local_notifications: ^19.2.0
 
 
 dev_dependencies:

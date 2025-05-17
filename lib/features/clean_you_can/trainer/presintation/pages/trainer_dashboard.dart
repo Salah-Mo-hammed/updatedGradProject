@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/center_course_details_page.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/trainer/presintation/bloc/trainer_bloc.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/trainer/presintation/bloc/trainer_event.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/trainer/presintation/bloc/trainer_state.dart';
@@ -146,12 +148,7 @@ class TrainerDashboardPage extends StatelessWidget {
                             children: [
                               _buildCourseCard(
                                 context,
-                                title: course.title,
-                                // badgeText: course.badgeText,
-                                students:
-                                    '${course.enrolledStudents.length} Students',
-                                // updated: 'Updated ${course.updated}',
-                                // progress: course.progress,
+                                course: course,
                               ),
                               const SizedBox(height: 16),
                             ],
@@ -221,11 +218,7 @@ class TrainerDashboardPage extends StatelessWidget {
   Widget _buildCourseCard(
     BuildContext context, {
 
-    required String title,
-    // required String badgeText,
-    required String students,
-    // required String updated,
-    // required double progress,
+    required CourseEntity course,
   }) {
     return Card(
       shape: RoundedRectangleBorder(
@@ -250,7 +243,7 @@ class TrainerDashboardPage extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        title,
+                        course.title,
                         style:
                             Theme.of(context).textTheme.titleMedium,
                         overflow: TextOverflow.ellipsis,
@@ -274,7 +267,7 @@ class TrainerDashboardPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  '$students • "updated 90 days"',
+                  '${course.enrolledStudents.length} • "updated 90 days"',
                   style: const TextStyle(color: Colors.grey),
                 ),
                 const SizedBox(height: 12),
@@ -284,7 +277,18 @@ class TrainerDashboardPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => CourseDetailsForCenter(
+                              course: course,
+                              isForTrainer: true,
+                            ),
+                      ),
+                    );
+                  },
                   child: const Text('Manage Course'),
                 ),
               ],

@@ -4,16 +4,21 @@ import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/bl
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/add_sourse_session_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/center/presentation/pages/edit_course_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/course/domain/entities/course_entity.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/pages/course_sessions_page.dart';
+import 'package:grad_project_ver_1/features/clean_you_can/student/presentation/pages/enrolled_course_content_page.dart';
 import 'package:grad_project_ver_1/features/clean_you_can/trainer/domain/entities/trainer_entity.dart';
 
 class CourseDetailsForCenter extends StatelessWidget {
   final CourseEntity course;
-  final List<TrainerEntity> trainers;
+  final List<TrainerEntity>? trainers;
+  final bool isForTrainer;
 
   const CourseDetailsForCenter({
     super.key,
     required this.course,
-    required this.trainers,
+    required this.isForTrainer,
+
+    this.trainers,
   });
 
   @override
@@ -30,29 +35,46 @@ class CourseDetailsForCenter extends StatelessWidget {
         backgroundColor: Colors.blueAccent,
         centerTitle: true,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.delete, color: Colors.white),
-            onPressed: () {
-              context.read<CenterCoursesBloc>().add(
-                DeleteCourseEvent(courseId: course.courseId),
-              );
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.edit, color: Colors.white),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder:
-                      (context) => EditCoursePage(
-                        course: course,
-                        availableTrainers: trainers,
-                      ),
-                ),
-              );
-            },
-          ),
+          if (!isForTrainer) ...[
+            IconButton(
+              icon: const Icon(Icons.delete, color: Colors.white),
+              onPressed: () {
+                context.read<CenterCoursesBloc>().add(
+                  DeleteCourseEvent(courseId: course.courseId),
+                );
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.edit, color: Colors.white),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => EditCoursePage(
+                          course: course,
+                          availableTrainers: trainers!,
+                        ),
+                  ),
+                );
+              },
+            ),
+          ] else ...[
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder:
+                        (context) => AddCourseSessionPage(
+                          courseId: course.courseId,
+                        ),
+                  ),
+                );
+              },
+              child: Text("add session urlq"),
+            ),
+          ],
         ],
       ),
       body: SingleChildScrollView(
@@ -80,27 +102,19 @@ class CourseDetailsForCenter extends StatelessWidget {
                     _buildDescription(course.description),
                   ],
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.grey.withOpacity(.3),
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  width: 150,
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => AddCourseSessionPage(courseId:course.courseId),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      "Add session url",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                  ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder:
+                            (context) => CourseSessionsPage(
+                              courseUrls: course.urls,
+                            ),
+                      ),
+                    );
+                  },
+                  child: Text("see sessions"),
                 ),
               ],
             ),
@@ -141,7 +155,7 @@ class CourseDetailsForCenter extends StatelessWidget {
   Widget _buildTitle(String title) => Text(
     title,
     style: const TextStyle(
-      fontSize: 26,
+      fontSize: 18,
       fontWeight: FontWeight.bold,
       color: Colors.black87,
     ),
